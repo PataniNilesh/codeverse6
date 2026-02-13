@@ -6,7 +6,8 @@
 <head>
     <title>Add Category</title>
 
-        <jsp:include page="AdminCSS.jsp"></jsp:include>
+    <jsp:include page="AdminCSS.jsp"></jsp:include>
+    
 </head>
 
 <body class="bg-light">
