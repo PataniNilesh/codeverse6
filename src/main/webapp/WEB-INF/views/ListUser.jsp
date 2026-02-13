@@ -46,6 +46,7 @@
                                 <th>Contact</th>
                                 <th>Profile Pic</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
@@ -84,6 +85,15 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
+                                    
+                                    <td><a href="editUser?userId=${u.userId }"
+                                    	class="btn btn-sm btn-warning">Edit</a> <a
+                                    	href="deleteUser?userId=${u.userId }"
+                                    	class="btn btn-sm btn-danger"
+                                    	onclick="return confirm('Are you sure?');"> Delete</a>
+                                    
+                                    	<a class="btn btn-secondary" href="viewuser?userId=${u.userId}">View</a>
+                                   	</td>
                                 </tr>
                             </c:forEach>
                         </tbody>
