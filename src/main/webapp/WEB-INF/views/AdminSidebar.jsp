@@ -17,6 +17,12 @@
                     <a class="nav-link text-white" href="listuser"> Users</a>
                 </li>
                 <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="newHackathon"> New Hackathon</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-white" href="listHackathon"> List Hackathon</a>
+                </li>
+                <li class="nav-item mb-2">
                     <a class="nav-link text-white" href="#"> Settings</a>
                 </li>
             </ul>

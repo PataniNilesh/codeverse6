@@ -2,6 +2,7 @@ package com.grownited.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,9 @@ import com.grownited.entity.UserTypeEntity;
 import com.grownited.repository.UserDetailRepository;
 import com.grownited.repository.UserRepository;
 import com.grownited.repository.UserTypeRepository;
+import com.grownited.service.MailerService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class SessionController {
@@ -26,6 +30,10 @@ public class SessionController {
 	
 	@Autowired
 	UserDetailRepository userDetailRepository;
+	
+	@Autowired
+	MailerService mailerService;
+	
 	
 	@GetMapping("/signup")
 	public String openSignupPage(Model model) {
@@ -40,6 +48,29 @@ public class SessionController {
 	@GetMapping("/login")
 	public String openLoginPage() {
 		return "Login";
+	}
+	
+	@PostMapping("/authenticate")
+	public String authenticate(String email, String password, Model model,HttpSession session) {
+		Optional<UserEntity> op = userRepository.findByEmail(email);
+		
+		if (op.isPresent()) {
+			UserEntity dbUser = op.get();
+			session.setAttribute("user",dbUser);
+			if (dbUser.getPassword().equals(password)) {
+				if (dbUser.getRole().equals("ADMIN")) {
+					return "redirect:/admin-dashboard";// url
+				} else if (dbUser.getRole().equals("PARTICIPANT")) {
+					return "redirect:/participant-dashboard"; // url 
+				} else if (dbUser.getRole().equals("JUDGE")) {
+					return "redirect:/judge-dashboard";
+				}
+			}
+		}
+		
+		model.addAttribute("error","Invalid credentials");
+		return "Login";
+		
 	}
 	
 	@GetMapping("/forgetpassword")
@@ -63,11 +94,17 @@ public class SessionController {
 		//users insert -> UserRepository
 		//new -> X
 		userRepository.save(userEntity); // users insert -> userId
-		
 		userDetailEntity.setUserId(userEntity.getUserId());
 		userDetailRepository.save(userDetailEntity);
 		
+		//welcome mail send
+		mailerService.sendWelcomeMail(userEntity);
 		return "Login";
 	}
-
+	
+	@GetMapping("logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "Login";
+	}
 }
