@@ -1,0 +1,296 @@
+How to create jsp ? 
+	right click on views folder ->  new -> other -> type -> jsp -> next -> give jsp name and finish 
+	
+	
+How To create  controller ? 
+	1) right click on controller folder -> new -> other -> type class -> next -> Give class name and finish 
+	2) use @Controller annotation above the class name 
+	
+	
+class =>
+			1) variables 
+			2) methods 
+
+How to run project / start server ?
+project -> right click -> run as -> spring boot application 
+
+
+
+How to create entity ? 
+	we have folder called entity inside grownited folder 
+		if not then we have to create folder entity 
+	now create class UserEntity inside entity folder 
+	use @Entity and @Table(name="users") at class level annotation 
+	add variable in your UserEntity like , userId, firstName etc. 
+	
+	every entity must have primary key
+		to mark field as a primary key and auto_increment we will use following annotations 
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		Integer userId 
+		
+
+
+
+	
+How to generate getters and setters? 
+	in yout class do right click at blank space ,
+	then click on source -> now click on generate getters and setters ->
+	select all -> Generate. 
+	
+	
+Hibernate -> java -> database -> 
+		no need to write sql
+		if you want you can write 
+		
+		
+		JAVA 		OOP
+		Hibernate 	ORM
+		
+		class ---> table 
+		entity --> 
+		class -> variable --> columns 
+		object -> save -> record : insert 
+		  
+	
+How to create Repository ? 
+	we must have to create repostitory inside repository folder 
+		so 1) we will create repository folder if we dont have 
+		   2) right click on repository folder 
+		   		click -> new -> other ->
+		   		type interface -> interface click -> next
+		   			name input -> UserRepository -> finish
+		   			
+		   3) use @Repository annotation 
+		   4) extends JpaRepositor<T,ID>
+		   						T -> Table's entity 
+		   						Id -> primary key's data type 
+		   						 			 
+		   	  
+		
+4 , 5 , 6 
+all Entity 
+Repository 
+Controller 	
+
+
+1) CategoryEntity
+2) CategoryRepository  
+	
+---------------------------------------------------------
+
+@Entity 
+@Table 
+@Id
+@Column
+@GeneratedValue
+@Controller 
+@Getmapping 
+@Postmapping 
+
+---------------------------------------------------------
+
+
+table : entity 
+db query : repository 
+
+
+insert() : save() 
+select() : findAll()
+
+
+--------------------------------------------------
+template -> 
+https://youtu.be/HBgmpPl89lg
+-----------------------------------------------------------------------
+
+session => HttpSession
+
+(HttpSession session)
+
+data add -> setAttribute("dataName",data); 
+	session.setAttribute("user",dbUser); 
+	
+destroy => invalidate() 
+	session.invalidate()
+	
+
+jsp -> ${sessionScope.user.firstName}
+
+<img src="${sessionScope.user.profilePicURL}" /> 
+	
+----------------------------------------------------------------------
+session management video :- 
+https://youtu.be/diJ7W6hUNZ4
+
+
+----------------------------------------------------------------------
+
+Login -> password authenticate -> session =>  role redirect -> 
+
+
+How to send email - welcome mail - user - signup 
+
+mail api -> 
+	gmail 
+	
+	
+step 1: mail jar / api 
+
+
+step 2: mail configuration
+			application.properties 
+		
+step 3: send mail code -- MailerService 
+								1) welcome mail
+								2) otp send - forget password 
+								3) change password 
+
+step 4: controller -> service -> call
+
+
+----------------------------------------------------------------
+mail send video
+https://youtu.be/mubtitknsPA
+----------------------------------------------------------------
+mail with tempalte 
+https://us02web.zoom.us/rec/share/wM8H1Rs1V_mr16StlB3pgFZPTC5k8CMrqrysbx_hQnVsO28GWiALjpLKdE91AxIi.SibitCJ8PYSExG_F?startTime=1771402476000
+Passcode: 6d8+6hP$
+----------------------------------------------------------------
+
+guj123456789
+
+b6h54u38e7rf6g5fre83i4j5hb6u 
+
+b6h54u38e7rf6g5fre83i4j5hb6u -> guj123456789
+
+Bcrypt -> 
+
+signup -> plain text -> submit-> register -> read -> Bcrypt -> plainTextPassword -> encode ->
+			user-> db insert -> 
+			 
+1)	pom.xml -> spring crypto 
+
+<!-- Source: https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
+<dependency>
+    <groupId>org.springframework.security</groupId>
+    <artifactId>spring-security-crypto</artifactId>
+</dependency>		
+
+
+2)  create singleton -- PasswordEncoder bean
+			@Bean 
+			PasswordEncoder	getPasswordEncoder(){
+				return new BcryptPasswordEncoder();
+			}
+
+
+3)  @Autowired 
+	PasswordEncoder passwordEncoder; 
+	passwordEncoder.encode(plainTextPassword);
+	
+	
+------------------------------------------------------------------------
+file upload : profic upload 	
+
+cloudinary -> 
+
+step 1: 
+	CLOUD_NAME=dlw7unme2
+	API_KEY=328275741683247
+	API_SECRET=265u4PdLzfYPmej8zma9L4gS_p4
+
+
+step 2: 
+	pom.xml -> cloudinary
+	<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.31.0</version> <!-- or use latest -->
+	</dependency>
+
+
+step 3: 
+	@Bean => cloudinary singleton 
+	@Bean
+    public Cloudinary cloudinary() {
+        Map<String, String> config = new HashMap<>();
+        config.put("cloud_name", "YOUR_CLOUD_NAME");
+        config.put("api_key", "YOUR_API_KEY");
+        config.put("api_secret", "YOUR_SECRET");
+        return new Cloudinary(config);
+    }
+   
+step 4: 
+		profile pic => input type:file name="profilePic" 
+		form -> method : post 
+		encType -> multipart/form-data 
+ 
+step 5:   
+		controller -> read 
+		MultiPartFile profilePic 
+		 
+
+step 6: 
+-------------------------------------------------------------------------------
+
+recordings ==> 
+password - bcrypt  { 2 recordings }
+https://us02web.zoom.us/rec/share/wlcNLUOQt5GfSEsfRW9ros1_vXR16e2LILZBjdmNFQfFJ4JlHKaxv2PkmdaBHk4.gDvumnTFzmtw1KGx 
+Passcode: M?!J7556
+
+cloudinary file upload 
+https://us02web.zoom.us/rec/share/EC7Wgq6r_UJDDi0e1WRbZdoJzP5uIb-j4UNTcFtJ4ZRHJ4NKgef-6D0VkMBJm0A.vKEnOAsDZ8X028yu?startTime=1771919100000
+Passcode: LeMNR2x?
+
+participant dashboard 
+https://us02web.zoom.us/rec/share/IFomT9anFba0rp9-HswQHn_H_c8G0tYF5UgWyIcSqO6kVuvr7EUEWnptmIGk7cof.Ewn7C8zHWn2-ONe9 
+Passcode: qNmq.8LQ
+
+-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+

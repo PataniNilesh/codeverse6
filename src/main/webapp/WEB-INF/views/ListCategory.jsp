@@ -4,7 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<!-- [Head] start -->
+
 <head>
   <title>Home | Codeverse6 Admin Template</title>
   <!-- [Meta] -->
@@ -18,99 +20,175 @@
   <jsp:include page="AdminCSS.jsp"></jsp:include>
 
 </head>
+<!-- [Head] end -->
+<!-- [Body] Start -->
 
-<body class="bg-light">
-<!-- [ Pre-loader ] start -->
+<body data-pc-preset="preset-1"
+      data-pc-direction="ltr"
+      data-pc-theme="light">
+
+<!-- Loader -->
 <div class="loader-bg">
   <div class="loader-track">
     <div class="loader-fill"></div>
   </div>
 </div>
-<!-- [ Pre-loader ] End -->
-<!-- [ Sidebar Menu ] start -->
+
+<!-- Sidebar -->
 <jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
-<!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
+
+<!-- Header -->
 <jsp:include page="AdminHeader.jsp"></jsp:include>
 
-<!-- [ Header ] end -->
-
-<div class="row">
-    <div class="col-12 grid-margin">
-        <div class="card">            
-            <!-- Card Header -->
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Category List</h5>
-                <a href="newCategory" class="btn btn-primary btn-sm">
-                    + Add Category
-                </a>
-            </div>
-            <!-- Card Body -->
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle text-center">
-                        <thead class="table-light">
-                            <tr>
-                                <th>#</th>
-                                <th>Category Name</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:if test="${empty categoryList}">
-                                <tr>
-                                    <td colspan="4" class="text-muted">
-                                        No categories found
-                                    </td>
-                                </tr>
-                            </c:if>
-                            <c:forEach var="cat" items="${categoryList}" varStatus="i">
-                                <tr>
-                                    <td>${i.index + 1}</td>
-                                    <td class="fw-semibold">
-                                        ${cat.categoryName}
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${cat.active}">
-                                                <span class="badge bg-success">
-                                                    Active
-                                                </span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span class="badge bg-danger">
-                                                    Inactive
-                                                </span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <a href="editCategory?id=${cat.categoryId}"
-                                           class="btn btn-warning btn-sm">
-                                           Edit
-                                        </a>
-
-                                        <a href="deleteCategory?id=${cat.categoryId}"
-                                           class="btn btn-danger btn-sm"
-                                           onclick="return confirm('Delete this category?')">
-                                           Delete
-                                        </a>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- ===== DYNAMIC CONTENT ===== -->
+<div class="pc-container">
+  <div class="pc-content">
+		<!-- ================= PAGE HEADER ================= -->
+	<div class="page-header mb-4">
+	    <div class="d-flex justify-content-between align-items-center flex-wrap">
+	
+	        <div>
+	            <h4 class="fw-bold mb-1">Category Management</h4>
+	            <nav aria-label="breadcrumb">
+	                <ol class="breadcrumb small">
+	                    <li class="breadcrumb-item">Dashboard</li>
+	                    <li class="breadcrumb-item">Category</li>
+	                    <li class="breadcrumb-item active">List</li>
+	                </ol>
+	            </nav>
+	        </div>
+	
+	        <a href="newCategory" class="btn btn-primary shadow-sm">
+	            + Add Category
+	        </a>
+	
+	    </div>
+	</div>
+	
+	
+	<!-- ================= CATEGORY TABLE ================= -->
+	<div class="row">
+	    <div class="col-12">
+	
+	        <div class="card shadow-sm border-0 rounded-3">
+	
+	            <!-- Card Header -->
+	            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+	
+	                <h5 class="mb-0 fw-semibold">Category List</h5>
+	
+	                <!-- Search -->
+	                <input type="text"
+	                       class="form-control form-control-sm w-auto"
+	                       placeholder="Search category...">
+	
+	            </div>
+	
+	
+	            <!-- Card Body -->
+	            <div class="card-body p-0">
+	
+	                <div class="table-responsive">
+	
+	                    <table class="table table-hover align-middle text-center mb-0">
+	
+	                        <!-- Table Header -->
+	                        <thead class="table-light">
+	                            <tr>
+	                                <th width="70">#</th>
+	                                <th class="text-start">Category Name</th>
+	                                <th width="150">Status</th>
+	                                <th width="200">Action</th>
+	                            </tr>
+	                        </thead>
+	
+	
+	                        <!-- Table Body -->
+	                        <tbody>
+	
+	                            <!-- Empty Data -->
+	                            <c:if test="${empty categoryList}">
+	                                <tr>
+	                                    <td colspan="4" class="py-4 text-muted">
+	                                        No categories found
+	                                    </td>
+	                                </tr>
+	                            </c:if>
+	
+	
+	                            <!-- Category List -->
+	                            <c:forEach var="cat" items="${categoryList}" varStatus="i">
+	
+	                                <tr>
+	
+	                                    <td class="fw-semibold">
+	                                        ${i.index + 1}
+	                                    </td>
+	
+	                                    <td class="text-start fw-semibold">
+	                                        ${cat.categoryName}
+	                                    </td>
+	
+	
+	                                    <!-- Status -->
+	                                    <td>
+	                                        <c:choose>
+	
+	                                            <c:when test="${cat.active}">
+	                                                <span class="badge rounded-pill bg-success px-3">
+	                                                    Active
+	                                                </span>
+	                                            </c:when>
+	
+	                                            <c:otherwise>
+	                                                <span class="badge rounded-pill bg-secondary px-3">
+	                                                    Inactive
+	                                                </span>
+	                                            </c:otherwise>
+	
+	                                        </c:choose>
+	                                    </td>
+	
+	
+	                                    <!-- Action Buttons -->
+	                                    <td>
+	
+	                                        <a href="editCategory?id=${cat.categoryId}"
+	                                           class="btn btn-sm btn-outline-warning me-2">
+	                                           Edit
+	                                        </a>
+	
+	                                        <a href="deleteCategory?id=${cat.categoryId}"
+	                                           class="btn btn-sm btn-outline-danger"
+	                                           onclick="return confirm('Delete this category?')">
+	                                           Delete
+	                                        </a>
+	
+	                                    </td>
+	
+	                                </tr>
+	
+	                            </c:forEach>
+	
+	                        </tbody>
+	
+	                    </table>
+	
+	                </div>
+	
+	            </div>
+	
+	        </div>
+	
+	    </div>
+	</div>
+ 
+	
+  </div>
 </div>
 
-<!-- [ Footer ] start-->
+<!-- Footer -->
   <jsp:include page="AdminFooter.jsp"></jsp:include>
-  
- <!-- [ Footer ] end-->
 
-  
 </body>
-</html>
+</html> 

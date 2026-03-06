@@ -26,7 +26,7 @@
 					</div>
 
 					<div class="card-body">
-						<form action="register" method="post">
+						<form action="register" method="post" enctype="multipart/form-data">
 
 							<!-- First Name -->
 							<div class="mb-3">
@@ -131,7 +131,7 @@
 							<!-- Profile Pic URL -->
 							<div class="mb-3">
 								<label class="form-label">Profile Picture URL</label> <input
-									type="file" name="profilePicURL" class="form-control">
+									type="file" name="profilePic" class="form-control">
 							</div>
 
 

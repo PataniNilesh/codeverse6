@@ -1,163 +1,189 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-
+    pageEncoding="UTF-8"%>
+    
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html lang="en">
+<!-- [Head] start -->
+
 <head>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Skydash Admin</title>
-<!-- plugins:css -->
-
-<jsp:include page="AdminCSS.jsp"></jsp:include>
-
-<style>
-.UPCOMING {
-	background: #17a2b8;
-}
-
-.ONGOING {
-	background: #28a745;
-}
-
-.COMPLETED {
-	background: #6c757d;
-}
-
-.FREE {
-	background: #28a745;
-}
-
-.PAID {
-	background: #dc3545;
-}
-
-  .btn-add { background: #28a745; }
-        .btn-edit { background: #ffc107; color: black; }
-        .btn-delete { background: #dc3545; }
-        .btn-view { background: #007bff; }
-</style>
+  <title>Home | Codeverse6 Admin Template</title>
+  <!-- [Meta] -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Mantis is made using Bootstrap 5 design framework. Download the free admin template & use it for your project.">
+  <meta name="keywords" content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
+  <meta name="author" content="CodedThemes">
+  
+  <jsp:include page="AdminCSS.jsp"></jsp:include>
 
 </head>
-<body>
-	<div class="container-scroller">
-		<!-- partial:partials/_navbar.html -->
-		<jsp:include page="AdminHeader.jsp"></jsp:include>
-		<!-- partial -->
-		<div class="container-fluid page-body-wrapper">
-			<!-- partial:partials/_sidebar.html -->
-			<jsp:include page="AdminSidebar.jsp"></jsp:include>
-			<!-- partial -->
-			<div class="main-panel">
-				<div class="content-wrapper">
-					<div class="row">
-						<div class="col-md-12 grid-margin">
-							<div class="row">
-								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
-									<h3 class="font-weight-bold">List Hackathon</h3>
+<!-- [Head] end -->
+<!-- [Body] Start -->
 
-								</div>
+<body data-pc-preset="preset-1"
+      data-pc-direction="ltr"
+      data-pc-theme="light">
 
-							</div>
-						</div>
-					</div>
+<!-- Loader -->
+<div class="loader-bg">
+  <div class="loader-track">
+    <div class="loader-fill"></div>
+  </div>
+</div>
 
+<!-- Sidebar -->
+<jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
 
-					<div class="row">
-						<div class="col-md-12">
-							<div class="card">
-								<div class="card-body">
-									<div class="d-flex justify-content-between">
-										<p class="card-title">All Hackathon</p>
-										<a href="newHackathon" class="text-info">New</a>
-									</div>
-									<div class="table-responsive">
-										<table class="table table-bordered table-hover">
-											<thead>
-												<tr>
-													<th>#</th>
-													<th>Title</th>
-													<th>Status</th>
-													<th>Event Type</th>
-													<th>Payment</th>
-													<th>Team Size</th>
-													<th>Location</th>
-													<th>Registration Period</th>
-													<th>Actions</th>
-												</tr>
-											</thead>
+<!-- Header -->
+<jsp:include page="AdminHeader.jsp"></jsp:include>
 
-											<tbody>
-												<c:choose>
-													<c:when test="${empty allHackathon}">
-														<tr>
-															<td colspan="9">No hackathons found</td>
-														</tr>
-													</c:when>
-
-													<c:otherwise>
-														<c:forEach var="h" items="${allHackathon}" varStatus="i">
-															<tr>
-																<td>${i.count}</td>
-																<td>${h.title}</td>
-
-																<td><span class="badge ${h.status}">
-																		${h.status} </span></td>
-
-																<td>${h.eventType}</td>
-
-																<td><span class="badge ${h.payment}">
-																		${h.payment} </span></td>
-
-																<td>${h.minTeamSize}-${h.maxTeamSize}</td>
-
-																<td>${h.location}</td>
-
-																<td>${h.registrationStartDate}to
-																	${h.registrationEndDate}</td>
-
-																<td><a href="viewHackathon" class="btn btn-view">View</a>
-																	<a href="editHackathon" class="btn btn-edit">Edit</a> <a
-																	href="deleteHackathon?hackathonId=${h.hackathonId}"
-																	class="btn btn-delete"
-																	onclick="return confirm('Are you sure you want to delete this hackathon?')">
-																		Delete </a></td>
-															</tr>
-														</c:forEach>
-													</c:otherwise>
-												</c:choose>
-											</tbody>
-										</table>
-									</div>
-
-
-
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-				</div>
-				<!-- content-wrapper ends -->
-				<!-- partial:partials/_footer.html -->
-
-				<jsp:include page="AdminFooter.jsp"></jsp:include>
-				<!-- partial -->
-			</div>
-			<!-- main-panel ends -->
-		</div>
-		<!-- page-body-wrapper ends -->
+<!-- ===== DYNAMIC CONTENT ===== -->
+<div class="pc-container">
+  <div class="pc-content">
+	<!-- Page Header -->
+	<div class="page-header mb-4">
+	    <div class="row align-items-center">
+	        <div class="col-md-6">
+	            <h4 class="mb-0">List Hackathon</h4>
+	        </div>
+	
+	        <div class="col-md-6 text-end">
+	            <a href="newHackathon" class="btn btn-primary">
+	                + New Hackathon
+	            </a>
+	        </div>
+	    </div>
 	</div>
-	<!-- container-scroller -->
-	<!-- plugins:js -->
+	
+	
+	<!-- Hackathon Table -->
+	<div class="row">
+	    <div class="col-12">
+	
+	        <div class="card">
+	
+	            <div class="card-header">
+	                <h5 class="mb-0">All Hackathons</h5>
+	            </div>
+	
+	            <div class="card-body">
+	
+	                <div class="table-responsive">
+	
+	                    <table class="table table-hover align-middle text-center">
+	
+	                        <thead class="table-light">
+	                            <tr>
+	                                <th>#</th>
+	                                <th>Title</th>
+	                                <th>Status</th>
+	                                <th>Event Type</th>
+	                                <th>Payment</th>
+	                                <th>Team Size</th>
+	                                <th>Location</th>
+	                                <th>Registration Period</th>
+	                                <th>Actions</th>
+	                            </tr>
+	                        </thead>
+	
+	                        <tbody>
+	
+	                            <c:choose>
+	
+	                                <c:when test="${empty allHackathon}">
+	                                    <tr>
+	                                        <td colspan="9" class="text-muted">
+	                                            No hackathons found
+	                                        </td>
+	                                    </tr>
+	                                </c:when>
+	
+	                                <c:otherwise>
+	                                    <c:forEach var="h" items="${allHackathon}" varStatus="i">
+	
+	                                        <tr>
+	                                            <td>${i.hackathodId}</td>
+	
+	                                            <td class="fw-semibold">
+	                                                ${h.title}
+	                                            </td>
+	
+	                                            <td>
+	                                                <span class="badge bg-info">
+	                                                    ${h.status}
+	                                                </span>
+	                                            </td>
+	
+	                                            <td>${h.eventType}</td>
+	
+	                                            <td>
+	                                                <span class="badge bg-secondary">
+	                                                    ${h.payment}
+	                                                </span>
+	                                            </td>
+	
+	                                            <td>
+	                                                ${h.minTeamSize} - ${h.maxTeamSize}
+	                                            </td>
+	
+	                                            <td>${h.location}</td>
+	
+	                                            <td>
+	                                                ${h.registrationStartDate}
+	                                                <br>
+	                                                to
+	                                                <br>
+	                                                ${h.registrationEndDate}
+	                                            </td>
+	
+	                                            <td>
+	
+	                                                <a href="viewHackathon?id=${h.hackathonId}"
+	                                                   class="btn btn-sm btn-info">
+	                                                   View
+	                                                </a>
+	
+	                                                <a href="editHackathon?id=${h.hackathonId}"
+	                                                   class="btn btn-sm btn-warning">
+	                                                   Edit
+	                                                </a>
+	
+	                                                <a href="deleteHackathon?hackathonId=${h.hackathonId}"
+	                                                   class="btn btn-sm btn-danger"
+	                                                   onclick="return confirm('Delete this hackathon?')">
+	                                                   Delete
+	                                                </a>
+	
+	                                            </td>
+	
+	                                        </tr>
+	
+	                                    </c:forEach>
+	                                </c:otherwise>
+	
+	                            </c:choose>
+	
+	                        </tbody>
+	
+	                    </table>
+	
+	                </div>
+	            </div>
+	
+	        </div>
+	
+	    </div>
+	</div>
+ 
+	
+  </div>
+</div>
 
+<!-- Footer -->
+  <jsp:include page="AdminFooter.jsp"></jsp:include>
 
-
-
-	<!-- End custom js for this page-->
 </body>
 </html>

@@ -43,123 +43,129 @@
 <!-- ===== DYNAMIC CONTENT ===== -->
 <div class="pc-container">
   <div class="pc-content">
-	<!-- Page Heading -->
-	<div class="row mb-4">
-		<div class="col-12">
-			<h3 class="font-weight-bold text-center">New Hackathon</h3>
-		</div>
+		<!-- Page Header -->
+	<div class="page-header mb-4">
+	    <div class="row align-items-center">
+	        <div class="col-md-6">
+	            <h4 class="mb-0">User Management</h4>
+	        </div>
+	
+	        <div class="col-md-6 text-end">
+	            <a href="newUser" class="btn btn-primary btn-sm">
+	                + Add User
+	            </a>
+	        </div>
+	    </div>
 	</div>
 	
-	<!-- Center Form -->
-	<div class="row justify-content-center">
-		<div class="col-md-6 col-lg-5">
 	
-			<div class="card shadow-sm">
-				<div class="card-body">
+	<!-- User List Card -->
+	<div class="card shadow-sm">
 	
-					<div class="d-flex justify-content-between align-items-center mb-3">
-						<p class="card-title mb-0">Add New Hackathon</p>
-						<a href="listHackathon" class="text-info">View all</a>
-					</div>
+	    <div class="card-header bg-dark text-white">
+	        <h5 class="mb-0">User List</h5>
+	    </div>
 	
-					<form action="saveHackathon" method="post">
+	    <div class="card-body table-responsive">
 	
-						<!-- Title -->
-						<div class="form-group">
-							<label>Hackathon Title</label> <input type="text"
-								class="form-control" name="title" required />
-						</div>
+	        <table class="table table-bordered table-hover align-middle text-center">
 	
-						<!-- Status -->
-						<div class="form-group">
-							<label>Status</label> <select name="status" required
-								class="form-control">
-								<option value="">-- Select Status --</option>
-								<option value="UPCOMING">Upcoming</option>
-								<option value="ONGOING">Ongoing</option>
-								<option value="COMPLETED">Completed</option>
-							</select>
-						</div>
+	            <thead class="table-secondary">
+	                <tr>
+	                    <th>#</th>
+	                    <th>First Name</th>
+	                    <th>Last Name</th>
+	                    <th>Email</th>
+	                    <th>Role</th>
+	                    <th>Gender</th>
+	                    <th>Birth Year</th>
+	                    <th>Contact</th>
+	                    <th>Profile Pic</th>
+	                    <th>Status</th>
+	                    <th width="200">Action</th>
+	                </tr>
+	            </thead>
 	
-						<!-- Event Type -->
-						<div class="form-group">
-							<label>Event Type</label> <select name="eventType"
-								class="form-control" required>
-								<option value="">-- Select Event Type --</option>
-								<option value="ONLINE">Online</option>
-								<option value="OFFLINE">Offline</option>
-								<option value="HYBRID">Hybrid</option>
-							</select>
-						</div>
+	            <tbody>
 	
-						<!-- Payment -->
-						<div class="form-group">
-							<label>Payment</label> <select name="payment"
-								class="form-control" required>
-								<option value="">-- Select Payment Type --</option>
-								<option value="FREE">Free</option>
-								<option value="PAID">Paid</option>
-							</select>
-						</div>
+	                <c:if test="${empty userList}">
+	                    <tr>
+	                        <td colspan="11" class="text-muted">
+	                            No users found
+	                        </td>
+	                    </tr>
+	                </c:if>
 	
-						<!-- Team Size -->
-						<div class="row">
-							<div class="form-group">
-								<label>Minimum Team Size</label> <input class="form-control"
-									type="number" name="minTeamSize" min="1" required />
-							</div>
+	                <c:forEach var="u" items="${userList}">
+	                    <tr>
 	
-							<div class="form-group">
-								<label>Maximum Team Size</label> <input class="form-control"
-									type="number" name="maxTeamSize" min="1" required />
-							</div>
-						</div>
+	                        <td>${u.userId}</td>
+	                        <td>${u.firstName}</td>
+	                        <td>${u.lastName}</td>
+	                        <td>${u.email}</td>
 	
-						<!-- Location -->
-						<div class="form-group">
-							<label>Location</label> <input type="text"
-								class="form-control" name="location" />
-						</div>
+	                        <td>
+	                            <span class="badge bg-info text-dark">
+	                                ${u.role}
+	                            </span>
+	                        </td>
 	
-						<!-- User Type -->
-						<div class="form-group">
-							<label>User Type</label> <select class="form-control"
-								name="userTypeId" required>
-								<option value="">-- Select User Type --</option>
-								<c:forEach var="u" items="${allUserType}">
-									<option value="${u.userTypeId}">${u.userType}</option>
-								</c:forEach>
-							</select>
-						</div>
+	                        <td>${u.gender}</td>
+	                        <td>${u.birthYear}</td>
+	                        <td>${u.contactNum}</td>
 	
-						<!-- Registration Dates -->
-						<div class="row">
-							<div class="form-group">
-								<label>Registration Start Date</label> <input
-									class="form-control" type="date"
-									name="registrationStartDate" required />
-							</div>
+	                        <td>
+	                            <img src="${u.profilePicUrl}"
+	                                 width="40"
+	                                 height="40"
+	                                 class="rounded-circle border">
+	                        </td>
 	
-							<div class="form-group">
-								<label>Registration End Date</label> <input
-									class="form-control" type="date" name="registrationEndDate"
-									required />
-							</div>
-						</div>
+	                        <td>
+	                            <c:choose>
+	                                <c:when test="${u.active}">
+	                                    <span class="badge bg-success">
+	                                        Active
+	                                    </span>
+	                                </c:when>
+	                                <c:otherwise>
+	                                    <span class="badge bg-danger">
+	                                        Inactive
+	                                    </span>
+	                                </c:otherwise>
+	                            </c:choose>
+	                        </td>
 	
-						<!-- Submit -->
-						<div style="text-align: center; margin-top: 20px;">
-							<button type="submit" class="btn btn-primary">Save
-								Hackathon</button>
-						</div>
+	                        <td>
 	
-					</form>
+	                            <a href="viewuser?userId=${u.userId}"
+	                               class="btn btn-sm btn-secondary">
+	                               View
+	                            </a>
 	
-				</div>
-			</div>
+	                            <a href="editUser?userId=${u.userId}"
+	                               class="btn btn-sm btn-warning">
+	                               Edit
+	                            </a>
 	
-		</div>
+	                            <a href="deleteUser?userId=${u.userId}"
+	                               class="btn btn-sm btn-danger"
+	                               onclick="return confirm('Are you sure?')">
+	                               Delete
+	                            </a>
+	
+	                        </td>
+	
+	                    </tr>
+	                </c:forEach>
+	
+	            </tbody>
+	
+	        </table>
+	
+	    </div>
 	</div>
+ 
 	
   </div>
 </div>
