@@ -106,5 +106,26 @@ public class MailerService {
 	    }
 	}
 	
+	public void sendOtpEmail(UserEntity user, String otp) {
+		try {
+			MimeMessage otpNum = javaMailSender.createMimeMessage();
+			
+			MimeMessageHelper helper = new MimeMessageHelper(otpNum);
+			
+			helper.setTo(user.getEmail());
+			helper.setSubject("Your Forget Password Otp");
+			helper.setText(
+					"Hello,\n\nYour OTP for password reset is: " + otp +
+	                "\n\nRegards,\nCodeVerse"
+			);
+			
+			javaMailSender.send(otpNum);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+	}
+	
 
 }

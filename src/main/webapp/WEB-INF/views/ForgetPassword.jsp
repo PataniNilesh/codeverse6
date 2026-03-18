@@ -45,7 +45,7 @@
                 <div class="alert alert-danger">${error}</div>
             </c:if>
 
-            <form action="sendResetLink" method="post">
+            <form action="send-otp" method="post">
 
                 <!-- Email Field -->
                 <div class="mb-3">

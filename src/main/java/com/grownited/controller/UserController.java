@@ -22,7 +22,7 @@ public class UserController {
 	@Autowired
 	UserDetailRepository userDetailRepository;
 	
-	@GetMapping("listuser")
+	@GetMapping("/listuser")
 	public String listUser(Model model) {
 		
 		List<UserEntity> allUser = userRepository.findAll();
@@ -30,7 +30,7 @@ public class UserController {
 		return "ListUser";
 	}
 	
-	@GetMapping("viewuser") 
+	@GetMapping("/viewuser") 
 	public String viewUser(Integer userId, Model model) {
 		
 		// read userId
@@ -50,8 +50,9 @@ public class UserController {
 			model.addAttribute("userDetail", userDetailEntity);
 			return "ViewUser";
 			
-		}
-		
+		}	
 	}
+	
+	
 
 }

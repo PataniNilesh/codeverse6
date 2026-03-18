@@ -18,12 +18,12 @@ public class CategoryController {
 	@Autowired // inject
 	CategoryRepository categoryRepository;
 	
-	@GetMapping("newCategory")
+	@GetMapping("/newCategory")
 	public String newCategory() {
 		return "NewCategory";
 	}
 	
-	@PostMapping("saveCategory")
+	@PostMapping("/saveCategory")
 	public String saveCategory(CategoryEntity categoryEntity) {
 		
 		categoryEntity.setActive(true);
@@ -32,7 +32,7 @@ public class CategoryController {
 		return "AdminDashboard";
 	}
 	
-	@GetMapping("listCategory") 
+	@GetMapping("/listCategory") 
 	public String lisCategory(Model model) {
 			
 		List<CategoryEntity> categoryList = categoryRepository.findAll();

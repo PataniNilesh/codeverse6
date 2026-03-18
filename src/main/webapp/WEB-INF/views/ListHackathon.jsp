@@ -105,7 +105,7 @@
 	                                    <c:forEach var="h" items="${allHackathon}" varStatus="i">
 	
 	                                        <tr>
-	                                            <td>${i.hackathodId}</td>
+	                                            <td>${i.count}</td>
 	
 	                                            <td class="fw-semibold">
 	                                                ${h.title}
