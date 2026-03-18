@@ -48,6 +48,12 @@ public class HackathonController {
 		return "ListHackathon";
 	}
 	
+	@GetMapping("/viewHackathon")
+	public String viewHackathon() {
+		
+		return "";
+	}
+	
 	@GetMapping("deleteHackathon")
 	public String deleteHackathon(Integer hackathonId) {
 		hackathonRepository.deleteById(hackathonId);
