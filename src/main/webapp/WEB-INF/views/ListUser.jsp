@@ -148,7 +148,7 @@
 	                               Edit
 	                            </a>
 	
-	                            <a href="deleteUser?userId=${u.userId}"
+	                            <a href="deleteuser?userId=${u.userId}"
 	                               class="btn btn-sm btn-danger"
 	                               onclick="return confirm('Are you sure?')">
 	                               Delete
