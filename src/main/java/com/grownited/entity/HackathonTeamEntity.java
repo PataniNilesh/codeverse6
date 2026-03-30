@@ -13,8 +13,9 @@ public class HackathonTeamEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer hackathonTeamId;
-	Integer hackathon_id;
-	Integer team_leader_id;
+	
+	Integer hackathonId;
+	Integer teamLeaderId;
 	String teamName;
 	String teamStatus;
 	
@@ -25,17 +26,17 @@ public class HackathonTeamEntity {
 	public void setHackathonTeamId(Integer hackathonTeamId) {
 		this.hackathonTeamId = hackathonTeamId;
 	}
-	public Integer getHackathon_id() {
-		return hackathon_id;
+	public Integer getHackathonId() {
+		return hackathonId;
 	}
-	public void setHackathon_id(Integer hackathon_id) {
-		this.hackathon_id = hackathon_id;
+	public void setHackathonId(Integer hackathonId) {
+		this.hackathonId = hackathonId;
 	}
-	public Integer getTeam_leader_id() {
-		return team_leader_id;
+	public Integer getTeamLeaderId() {
+		return teamLeaderId;
 	}
-	public void setTeam_leader_id(Integer team_leader_id) {
-		this.team_leader_id = team_leader_id;
+	public void setTeamLeaderId(Integer teamLeaderId) {
+		this.teamLeaderId = teamLeaderId;
 	}
 	public String getTeamName() {
 		return teamName;

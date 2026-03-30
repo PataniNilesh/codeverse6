@@ -1,6 +1,7 @@
 package com.grownited.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,14 +27,14 @@ public class HackathonController {
 	@Autowired
 	UserTypeRepository userTypeRepository;
 	
-	@GetMapping("newHackathon")
+	@GetMapping("/newHackathon")
 	public String newHackathon(Model model) {
 		List<UserTypeEntity> allUserType = userTypeRepository.findAll();
 		model.addAttribute("allUserType",allUserType);
 		return "NewHackathon";
 	}
 	
-	@PostMapping("saveHackathon")
+	@PostMapping("/saveHackathon")
 	public String saveHackathon(HackathonEntity hackathonEntity, HttpSession session) {
 		UserEntity currentLogInUser = (UserEntity) session.getAttribute("user");
 		hackathonEntity.setUserId(currentLogInUser.getUserId());
@@ -41,7 +42,7 @@ public class HackathonController {
 		return "redirect:/listHackathon"; // do not open jsp , open another url -> listHackathon
 	}
 	
-	@GetMapping("listHackathon")
+	@GetMapping("/listHackathon")
 	public String listHackathon(Model model) {
 		List<HackathonEntity> allHackathon = hackathonRepository.findAll();
 		model.addAttribute("allHackathon",allHackathon);
@@ -49,12 +50,17 @@ public class HackathonController {
 	}
 	
 	@GetMapping("/viewHackathon")
-	public String viewHackathon() {
+	public String viewHackathon(Integer hackathonId, Model model) {
+		Optional<HackathonEntity> opHackathon = hackathonRepository.findById(hackathonId);
 		
-		return "";
+		if(opHackathon.isEmpty()) {
+			return "redirect:/listHackathon";
+		}
+		model.addAttribute("hackathon", opHackathon.get());
+		return "ViewHackathon";
 	}
 	
-	@GetMapping("deleteHackathon")
+	@GetMapping("/deleteHackathon")
 	public String deleteHackathon(Integer hackathonId) {
 		hackathonRepository.deleteById(hackathonId);
 		

@@ -1,5 +1,6 @@
 package com.grownited.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +14,31 @@ public class HackathonDescriptionEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer hackathonDescriptionId;
+	
+	@Column(columnDefinition = "TEXT")
 	String hackathonDetails;
+	
+	public Integer getHackathonId() {
+		return hackathonId;
+	}
+	public void setHackathonId(Integer hackathonId) {
+		this.hackathonId = hackathonId;
+	}
+	Integer hackathonId;
+	
+	
+	public Integer getHackathonDescriptionId() {
+		return hackathonDescriptionId;
+	}
+	public void setHackathonDescriptionId(Integer hackathonDescriptionId) {
+		this.hackathonDescriptionId = hackathonDescriptionId;
+	}
+	public String getHackathonDetails() {
+		return hackathonDetails;
+	}
+	public void setHackathonDetails(String hackathonDetails) {
+		this.hackathonDetails = hackathonDetails;
+	}
 	
 	
 	

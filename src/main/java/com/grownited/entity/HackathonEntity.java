@@ -14,6 +14,7 @@ public class HackathonEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Integer hackathonId;
+	String description;
 	String title;
 	String status;
 	String eventType;
@@ -102,6 +103,12 @@ public class HackathonEntity {
 	}
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	

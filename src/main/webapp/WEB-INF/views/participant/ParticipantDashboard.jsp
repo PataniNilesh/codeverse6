@@ -17,7 +17,7 @@
   <meta name="keywords" content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
   <meta name="author" content="CodedThemes">
   
-  <jsp:include page="AdminCSS.jsp"></jsp:include>
+  <jsp:include page="ParticipantCSS.jsp"></jsp:include>
 
 </head>
 <!-- [Head] end -->
@@ -32,9 +32,9 @@
 </div>
 <!-- [ Pre-loader ] End -->
  <!-- [ Sidebar Menu ] start -->
-<jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
+<jsp:include page="ParticipantLeftSidebar.jsp"></jsp:include>
 <!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
-<jsp:include page="AdminHeader.jsp"></jsp:include>
+<jsp:include page="ParticipantHeader.jsp"></jsp:include>
 
 <!-- [ Header ] end -->
 
@@ -359,7 +359,7 @@
   </div>
   <!-- [ Main Content ] end -->
   <!-- [ Footer ] start-->
-  <jsp:include page="AdminFooter.jsp"></jsp:include> 
+  <jsp:include page="ParticipantFooter.jsp"></jsp:include> 
   <!-- [ Footer ] end-->
  
 </body>
