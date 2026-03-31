@@ -69,6 +69,18 @@
 							<label>Hackathon Title</label> <input type="text"
 								class="form-control" name="title" required />
 						</div>
+						
+						<div class="form-group">
+							<label>Short Description</label>
+							<textarea class="form-control" name="description" rows="3"
+								placeholder="Short summary about hackathon"></textarea>
+						</div>
+						
+						<div class="form-group">
+							<label>Hackathon Details (HTML)</label>
+							<textarea class="form-control" name="hackathonDetails" rows="6"
+								placeholder="<p>Full hackathon details...</p>" required></textarea>
+						</div>
 	
 						<!-- Status -->
 						<div class="form-group">
@@ -144,6 +156,48 @@
 								<label>Registration End Date</label> <input
 									class="form-control" type="date" name="registrationEndDate"
 									required />
+							</div>
+						</div>
+						
+						<hr/>
+						<h5>Prize Details</h5>
+						
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Prize 1 Title</label>
+								<input type="text" class="form-control" name="prizeTitle1"
+									placeholder="First Prize" required />
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Prize 1 Description</label>
+								<textarea class="form-control" name="prizeDescription1" rows="2"
+									placeholder="Prize 1 details" required></textarea>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Prize 2 Title (Optional)</label>
+								<input type="text" class="form-control" name="prizeTitle2"
+									placeholder="Second Prize" />
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Prize 2 Description (Optional)</label>
+								<textarea class="form-control" name="prizeDescription2" rows="2"
+									placeholder="Prize 2 details"></textarea>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Prize 3 Title (Optional)</label>
+								<input type="text" class="form-control" name="prizeTitle3"
+									placeholder="Third Prize" />
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Prize 3 Description (Optional)</label>
+								<textarea class="form-control" name="prizeDescription3" rows="2"
+									placeholder="Prize 3 details"></textarea>
 							</div>
 						</div>
 	

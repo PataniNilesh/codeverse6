@@ -506,7 +506,7 @@ body::before {
       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="9 18 15 12 9 6"/>
     </svg>
-    <span>Hackathon Title</span>
+    <span>${hackathon.title}</span>
     <!-- Replace "Hackathon Title" with: ${hackathon.title} -->
   </div>
 
@@ -537,13 +537,23 @@ body::before {
               </c:otherwise>
             </c:choose>
           -->
-          <span class="badge badge-live"><span class="badge-dot"></span>LIVE NOW</span>
+          <c:choose>
+          	<c:when test="${hackathon.status == 'ONGOING'}">
+          		<span class="badge badge-live"><span class="badge-dot"></span>LIVE NOW</span>
+          	</c:when>
+          	<c:when test="${hackathon.status == 'UPCOMING'}">
+          		<span class="badge badge-soon"><span class="badge-dot"></span>COMING SOON</span>
+          	</c:when>
+          	<c:otherwise>
+          		<span class="badge badge-ended">COMPLETED</span>
+          	</c:otherwise>
+          </c:choose>
 
           <!-- Replace static text with: ${hackathon.eventType} -->
-          <span class="badge badge-purple">Online</span>
+          <span class="badge badge-purple">${hackathon.eventType}</span>
 
           <!-- Replace static text with: ${hackathon.payment} -->
-          <span class="badge badge-green">FREE</span>
+          <span class="badge badge-green">${hackathon.payment}</span>
 
           <!--
             REGISTRATION OPEN/CLOSED badge:
@@ -552,19 +562,20 @@ body::before {
               ${registrationOpen ? 'Registration Open' : 'Registration Closed'}
             </span>
           -->
-          <span class="badge badge-green">Registration Open</span>
+          <span class="badge ${registartionOpen ? 'badge-green' : 'badge-amber'}">
+          	${registartionOpen ? 'Registration Open' : 'Registartion Closed'}
+          </span>
 
           <!-- Replace 42 with: ${teamCount} -->
-          <span class="badge badge-cyan">42 Teams Joined</span>
+          <span class="badge badge-cyan">${teamCount} Teams Joined</span>
         </div>
 
         <!-- Replace static text with: ${hackathon.title} -->
-        <h1 class="hero-title">Global AI Hackathon 2025</h1>
+        <h1 class="hero-title">${hackathon.title}</h1>
 
         <!-- Replace static text with: ${hackathon.description} -->
         <p class="hero-desc">
-          Build the next generation of AI-powered applications. Push boundaries,
-          form incredible teams, and compete for prizes worth millions.
+          ${hackathon.description}
         </p>
       </div>
 
