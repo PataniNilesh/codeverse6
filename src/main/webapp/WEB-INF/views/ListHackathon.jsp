@@ -141,7 +141,7 @@
 	
 	                                            <td>
 	
-	                                                <a href="viewHackathon?id=${h.hackathonId}"
+	                                                <a href="viewHackathon?hackathonId=${h.hackathonId}"
 	                                                   class="btn btn-sm btn-info">
 	                                                   View
 	                                                </a>

@@ -25,6 +25,7 @@ public class HackathonEntity {
 	Integer userTypeId;
 	LocalDate registrationStartDate;
 	LocalDate registrationEndDate;
+	Boolean leaderboardPublished;
 	
 	Integer userId; //fk 
 	
@@ -109,6 +110,12 @@ public class HackathonEntity {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public Boolean getLeaderboardPublished() {
+		return leaderboardPublished;
+	}
+	public void setLeaderboardPublished(Boolean leaderboardPublished) {
+		this.leaderboardPublished = leaderboardPublished;
 	}
 	
 	
