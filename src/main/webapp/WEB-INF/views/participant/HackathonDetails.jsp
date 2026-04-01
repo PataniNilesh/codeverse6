@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <!DOCTYPE html>
@@ -581,7 +583,6 @@ body::before {
 
       <!-- ── Action buttons ── -->
       <div class="hero-actions">
-        <!--
           Replace the buttons below with a JSTL choose block:
 
           <c:choose>
@@ -598,14 +599,20 @@ body::before {
             </c:when>
             <c:when test="${canJoin}">
               <form action="/participant/hackathon/${hackathon.hackathonId}/join" method="post">
-                <button type="submit" class="btn-primary">Join Hackathon</button>
+                <button type="submit" class="btn-primary">Join Hackathon
+               		<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
+			            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+			            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+		        	</svg>
+                </button>
               </form>
             </c:when>
             <c:otherwise>
               <button type="button" class="btn-primary" disabled>Join Hackathon</button>
             </c:otherwise>
           </c:choose>
-        -->
+        
+        <!-- 
         <button class="btn-primary">
           Join Hackathon
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
@@ -622,7 +629,7 @@ body::before {
             <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
           </svg>
           Share
-        </button>
+        </button>  -->
       </div>
     </div>
 
@@ -639,7 +646,7 @@ body::before {
         <div>
           <span class="stat-chip-label">TEAM SIZE</span>
           <!-- Replace with: ${hackathon.minTeamSize} – ${hackathon.maxTeamSize} members -->
-          2 – 4 members
+          ${hackathon.minTeamSize} - ${hackathon.maxTeamSize}
         </div>
       </div>
 
@@ -652,7 +659,7 @@ body::before {
         <div>
           <span class="stat-chip-label">REG. OPENS</span>
           <!-- Replace with: ${hackathon.registrationStartDate} -->
-          01 Apr 2025
+          ${hackathon.registrationStartDate}
         </div>
       </div>
 
@@ -664,7 +671,7 @@ body::before {
         <div>
           <span class="stat-chip-label">REG. CLOSES</span>
           <!-- Replace with: ${hackathon.registrationEndDate} -->
-          15 Apr 2025
+          ${hackathon.registrationEndDate}
         </div>
       </div>
 
@@ -677,7 +684,7 @@ body::before {
         <div>
           <span class="stat-chip-label">LOCATION</span>
           <!-- Replace with: ${hackathon.location} -->
-          Remote / Online
+          ${hackathon.location}
         </div>
       </div>
     </div>
@@ -688,35 +695,57 @@ body::before {
          ─────────────────────────────────────────────────── -->
 
     <!-- SUCCESS ALERTS — show the appropriate one via JSTL c:if -->
-    <div class="alert alert-success" style="margin-top:18px;">
-      <!-- Example: You have successfully joined this hackathon. -->
-      <!-- Example: Invitation accepted. You are now part of this team. -->
-      <!-- Example: Invitation rejected. -->
-      ✓ You have successfully joined this hackathon.
-    </div>
+    
+	<!-- Example: You have successfully joined this hackathon. -->
+	<!-- Example: Invitation accepted. You are now part of this team. -->
+	<!-- Example: Invitation rejected. -->
+	<c:if test="${joined == 'true'}">
+		<div class=" alert alert-success" style="margin-top:18px;">You have successfully joined this hackathon.</div>
+	</c:if>
+	<c:if test="${success == 'inviteAccepted'}">
+		<div class="alert alert-success" style="margin-top:18px;">Invitation accepted. You are now part of this team.</div>
+	</c:if>
+	<c:if test="${success == 'inviteRejected'}">
+		<div class="alert alert-success" style="margin-top:18px;">Invitation Rejected.</div>
+	</c:if>
 
     <!-- ERROR ALERTS — show the appropriate one via JSTL c:if -->
-    <!--
-    <div class="alert alert-error">✕ You are already registered in this hackathon.</div>
-    <div class="alert alert-error">✕ Registration is currently closed for this hackathon.</div>
-    <div class="alert alert-error">✕ Invitation is invalid or no longer available.</div>
-    <div class="alert alert-error">✕ This team is full, so invite cannot be accepted.</div>
-    <div class="alert alert-error">✕ You are already part of another team in this hackathon.</div>
-    <div class="alert alert-error">✕ Leaderboard will be available only after hackathon is marked complete.</div>
-    -->
+    <c:if test="${error == 'alreadyRegistered'}">
+    	<div class="alert alert-error" style="margin-top:18px;">You are already registered in this hackathon.</div>
+    </c:if>
+    <c:if test="${error = 'registrationClosed'}">
+    	<div class="alert alert-error" style="margin-top:18px;">Registration is currently closed for this hackathon.</div>
+    </c:if>
+    <c:if test="${error == 'inviteNotFound' || error == 'inviteInvalid'}">
+    	<div class="alert alert-error" style="margin-top:18px;">Invitation is invalid or no longer available.</div>
+    </c:if>
+    <c:if test="${error = 'teamFull'}">
+    	<div class="alert alert-error" style="margin-top:18px;">The team is full, so invitation cannot be accepted.</div>
+    </c:if>
+    <c:if test="${error == 'alreadyInHackathon'}">
+    	<div class="alert alert-error" style="margin-top:18px;">You are already part of another team in this hackathon.</div>
+    </c:if>
+    <c:if test="${error = 'leaderBoardNotReady'}">
+    	<div class="alert alert-error" style="margin-top:18px;">Leaderboard will be available only after hackathon is marked complete.</div>
+    </c:if>
+    
+    
 
     <!-- ── Leaderboard strip (show only when leaderboardAvailable) ──
          Wrap with: <c:if test="${leaderboardAvailable}"> ... </c:if>  -->
-    <div class="lb-strip" style="margin-top:16px;">
-      <div class="lb-strip-text">
-        🏆 Leaderboard is Live
-        <small>See how your team ranks among all participants</small>
-      </div>
-      <!-- Replace hackathonId with: ${hackathon.hackathonId} -->
-      <a href="/participant/hackathon/1/leaderboard" class="btn-ghost" style="flex-shrink:0;">
-        View Leaderboard →
-      </a>
-    </div>
+    <c:if test="${leaderboardAvailable}">
+	    <div class="lb-strip" style="margin-top:16px;">
+	      <div class="lb-strip-text">
+	        🏆 Leaderboard is Live
+	        <small>See how your team ranks among all participants</small>
+	      </div>
+	      <!-- Replace hackathonId with: ${hackathon.hackathonId} -->
+	      <a href="/participant/hackathon/${hackathon.hackathonId}/leaderboard" class="btn-ghost" style="flex-shrink:0;">
+	        View Leaderboard →
+	      </a>
+	    </div>
+    </c:if>
+    
 
   </section>
   <!-- ═══ END HERO ════════════════════════════════════════ -->
@@ -753,15 +782,14 @@ body::before {
               </c:otherwise>
             </c:choose>
           -->
-          <p>
-            Welcome to the Global AI Hackathon 2025 — the world's largest collaborative
-            engineering sprint. Over 48 hours, teams will design, build, and present
-            AI-powered solutions to real-world problems.
-          </p>
-          <p>
-            Whether you're a seasoned engineer or a curious student, this hackathon is
-            your stage. Form a team, pick a challenge track, and ship something extraordinary.
-          </p>
+          	<c:choose>
+              <c:when test="${not empty hackathonDescription}">
+                <c:out value="${hackathonDescription.hackathonDetails}" escapeXml="false"/>
+              </c:when>
+              <c:otherwise>
+                <p class="empty-note">Detailed description is not available yet.</p>
+              </c:otherwise>
+            </c:choose>
         </div>
       </div>
 
@@ -804,36 +832,31 @@ body::before {
             </c:otherwise>
           </c:choose>
         -->
-        <div class="prize-list">
-          <div class="prize-item">
-            <div class="prize-medal">🥇</div>
-            <div class="prize-body">
-              <div class="prize-title">1. Grand Prize — ₹5,00,000</div>
-              <div class="prize-desc">Cash prize + mentorship from industry leaders + fast-track interviews at top tech firms.</div>
-            </div>
-          </div>
-          <div class="prize-item">
-            <div class="prize-medal">🥈</div>
-            <div class="prize-body">
-              <div class="prize-title">2. Runner Up — ₹2,00,000</div>
-              <div class="prize-desc">Cash prize + premium cloud credits worth ₹50,000 + swag pack.</div>
-            </div>
-          </div>
-          <div class="prize-item">
-            <div class="prize-medal">🥉</div>
-            <div class="prize-body">
-              <div class="prize-title">3. Second Runner Up — ₹1,00,000</div>
-              <div class="prize-desc">Cash prize + exclusive goodies + certificate of excellence.</div>
-            </div>
-          </div>
-          <div class="prize-item">
-            <div class="prize-medal">⭐</div>
-            <div class="prize-body">
-              <div class="prize-title">4. Best UI/UX Award</div>
-              <div class="prize-desc">Design-focused special prize for the most polished and accessible submission.</div>
-            </div>
-          </div>
-        </div>
+        <c:choose>
+	        <c:when test="${empty prizeList}">
+	          <p class="empty-note">Prize details are not published yet.</p>
+	        </c:when>
+	        <c:otherwise>
+	          <div class="prize-list">
+	            <c:forEach items="${prizeList}" var="p" varStatus="i">
+	              <div class="prize-item">
+	                <div class="prize-medal">
+	                  <c:choose>
+	                    <c:when test="${i.count == 1}">🥇</c:when>
+	                    <c:when test="${i.count == 2}">🥈</c:when>
+	                    <c:when test="${i.count == 3}">🥉</c:when>
+	                    <c:otherwise>⭐</c:otherwise>
+	                  </c:choose>
+	                </div>
+	                <div class="prize-body">
+	                  <div class="prize-title">${i.count}. ${p.prizeTitle}</div>
+	                  <div class="prize-desc">${p.prizeDescription}</div>
+	                </div>
+	              </div>
+	            </c:forEach>
+	          </div>
+	        </c:otherwise>
+	    </c:choose>
       </div>
 
       <!-- Timeline -->
@@ -854,7 +877,7 @@ body::before {
             </div>
             <div class="tl-info">
               <div class="tl-label">Registration Opens</div>
-              <div class="tl-value">01 Apr 2025</div>
+              <div class="tl-value">${hackathon.registrationStartDate}</div>
             </div>
           </div>
           <div class="tl-row">
@@ -864,7 +887,7 @@ body::before {
             </div>
             <div class="tl-info">
               <div class="tl-label">Registration Closes</div>
-              <div class="tl-value">15 Apr 2025</div>
+              <div class="tl-value">${hackathon.registrationEndDate}</div>
             </div>
           </div>
           <div class="tl-row">
@@ -873,7 +896,7 @@ body::before {
               <div class="tl-line"></div>
             </div>
             <div class="tl-info">
-              <div class="tl-label">Hackathon Begins</div>
+              <div class="tl-label">Hackathon Begins</div> 
               <div class="tl-value">20 Apr 2025 · 09:00 AM</div>
             </div>
           </div>
@@ -928,36 +951,36 @@ body::before {
           <div class="info-row">
             <span class="info-key">Status</span>
             <!-- Replace with dynamic badge from c:choose on hackathon.status -->
-            <span class="info-val green">● Ongoing</span>
+            <span class="info-val green">${hackathon.status}</span>
           </div>
           <div class="info-row">
             <span class="info-key">Type</span>
-            <span class="info-val purple">Online</span>
+            <span class="info-val purple">${hackathon.eventType}</span>
           </div>
           <div class="info-row">
             <span class="info-key">Entry</span>
-            <span class="info-val green">Free</span>
+            <span class="info-val green">${hackathon.payment}</span>
           </div>
           <div class="info-row">
             <span class="info-key">Team Size</span>
-            <span class="info-val cyan">2 – 4</span>
+            <span class="info-val cyan"> ${hackathon.minTeamSize} – ${hackathon.maxTeamSize}</span>
           </div>
           <div class="info-row">
             <span class="info-key">Reg. Opens</span>
-            <span class="info-val">01 Apr 2025</span>
+            <span class="info-val">${hackathon.registrationStartDate}</span>
           </div>
           <div class="info-row">
             <span class="info-key">Reg. Closes</span>
-            <span class="info-val">15 Apr 2025</span>
+            <span class="info-val">1${hackathon.registrationEndDate}</span>
           </div>
           <div class="info-row">
             <span class="info-key">Location</span>
-            <span class="info-val">Remote</span>
+            <span class="info-val">${hackathon.location}</span>
           </div>
           <div class="info-row">
             <span class="info-key">Teams Joined</span>
             <!-- Replace 42 with: ${teamCount} -->
-            <span class="info-val amber">42</span>
+            <span class="info-val amber">${teamCount}</span>
           </div>
         </div>
       </div>
@@ -971,6 +994,35 @@ body::before {
           Same JSTL choose block as hero buttons — paste your dynamic version here
           so this sidebar CTA also responds to alreadyRegistered / pendingInvite / canJoin
         -->
+        <div class="hero-actions">
+          <c:choose>
+            <c:when test="${alreadyRegistered}">
+              <a href="/participant/hackathon/${hackathon.hackathonId}/team" class="btn-primary">Manage Team</a>
+            </c:when>
+            <c:when test="${not empty pendingInvite}">
+              <form action="/participant/hackathon/${hackathon.hackathonId}/invite/${pendingInvite.hackathonTeamInviteId}/accept" method="post">
+                <button type="submit" class="btn-primary">Accept Invitation</button>
+              </form>
+              <form action="/participant/hackathon/${hackathon.hackathonId}/invite/${pendingInvite.hackathonTeamInviteId}/reject" method="post">
+                <button type="submit" class="btn-primary btn-danger">Reject</button>
+              </form>
+            </c:when>
+            <c:when test="${canJoin}">
+              <form action="/participant/hackathon/${hackathon.hackathonId}/join" method="post">
+                <button type="submit" class="btn-primary">Join Hackathon
+               		<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
+			            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+			            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+		        	</svg>
+                </button>
+              </form>
+            </c:when>
+            <c:otherwise>
+              <button type="button" class="btn-primary" disabled>Join Hackathon</button>
+            </c:otherwise>
+          </c:choose>
+      	</div>
+        
         <button class="btn-primary" style="width:100%;">
           Join Hackathon
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
@@ -980,7 +1032,7 @@ body::before {
         </button>
         <p style="font-size:12px; color:var(--muted); margin-top:10px; line-height:1.5;">
           <!-- Replace: ${registrationOpen ? 'Registration is open.' : 'Registration is closed.'} -->
-          Registration is open. Join before the deadline!
+          ${registrationOpen ? 'Registration is open.' : 'Registration is closed.'}
         </p>
       </div>
 
