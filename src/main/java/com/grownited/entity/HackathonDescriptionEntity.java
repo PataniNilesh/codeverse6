@@ -18,12 +18,6 @@ public class HackathonDescriptionEntity {
 	@Column(columnDefinition = "TEXT")
 	String hackathonDetails;
 	
-	public Integer getHackathonId() {
-		return hackathonId;
-	}
-	public void setHackathonId(Integer hackathonId) {
-		this.hackathonId = hackathonId;
-	}
 	Integer hackathonId;
 	
 	
@@ -40,6 +34,12 @@ public class HackathonDescriptionEntity {
 		this.hackathonDetails = hackathonDetails;
 	}
 	
+	public Integer getHackathonId() {
+		return hackathonId;
+	}
+	public void setHackathonId(Integer hackathonId) {
+		this.hackathonId = hackathonId;
+	}
 	
 	
 	
