@@ -1,6 +1,9 @@
 package com.grownited.controller.participant;
 
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.grownited.entity.HackathonDescriptionEntity;
 import com.grownited.entity.HackathonEntity;
+import com.grownited.entity.HackathonParticipantEntity;
 import com.grownited.entity.HackathonTeamEntity;
 import com.grownited.entity.HackathonTeamInviteEntity;
 import com.grownited.entity.HackathonTeamMembersEntity;
@@ -47,7 +51,7 @@ public class ParticipantController {
 	
 	@Autowired
 	HackathonTeamInviteRepository hackathonTeamInviteRepository;
-		
+	
 	
 	@GetMapping("/participant/participant-dashboard")
 	public String participantDashboard() {
@@ -118,6 +122,81 @@ public class ParticipantController {
 		
 	}
 	
+	@GetMapping("participant/my-hackathons")
+	public String myHackathons(Model model, HttpSession session) {
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		if(user == null) {
+			return "redirect:/login";
+		}
+		
+		LocalDate today = LocalDate.now();
+		
+		Map<Integer, MyHackathonrow> rowMap = new LinkedHashMap<>();
+		
+		List<HackathonParticipantEntity> joinedHackathons = hackathonParticipantRepository.findByParticipantId(user.getUserId());
+		for(HackathonParticipantEntity joined : joinedHackathons) {
+			Optional<HackathonEntity> opHackathon = hackathonRepository.findById(joined.getHackathonId());
+			if(opHackathon.isPresent()) {
+				MyHackathonrow row = new MyHackathonrow();
+				row.setHackathon(opHackathon.get());
+				row.setTeamId(null);
+				row.setTeamName("Not Joined Any Team");
+				row.setLeader(false);
+				row.setRoleTitle("PARTICIPANT");
+				row.setTeamSize(0);
+				row.setPendingInvites(0);
+				row.setSubmissionEnabled(isSubmissionOpen(opHackathon.get(), today));
+				rowMap.put(opHackathon.get().getHackathonId(), row);
+			}
+		}
+		
+		List<HackathonTeamEntity> leaderTeams = hackathonTeamRepository.findByTeamLeaderId(user.getUserId());
+		for(HackathonTeamEntity team : leaderTeams) {
+			Optional<HackathonEntity> opHackathon = hackathonRepository.findById(team.getHackathonId());
+			if(opHackathon.isPresent()) {
+				HackathonEntity h = opHackathon.get();
+				MyHackathonrow row = new MyHackathonrow();
+				row.setHackathon(h);
+				row.setTeamId(team.getHackathonTeamId());
+				row.setTeamName(team.getTeamName());
+				row.setLeader(true);
+				row.setRoleTitle("TEAM_LEADER");
+				row.setTeamSize((int) hackathonTeamMembersRepository.countByTeamId(team.getHackathonTeamId()));
+				row.setPendingInvites((int) hackathonTeamInviteRepository.countByTeamIdAndInviteStatus(team.getHackathonTeamId(), "PENDING"));
+				row.setSubmissionEnabled(isSubmissionOpen(h, today));
+				rowMap.put(h.getHackathonId(), row);
+			}
+		}
+		
+		List<HackathonTeamMembersEntity> memberships = hackathonTeamMembersRepository.findByMemberId(user.getUserId());
+		for(HackathonTeamMembersEntity member : memberships) {
+			if(rowMap.containsKey(member.getHackathonId())) {
+				continue;
+			}
+			
+			Optional<HackathonEntity> opHackathon = hackathonRepository.findById(member.getHackathonId());
+			Optional<HackathonTeamEntity> opTeam = hackathonTeamRepository.findById(member.getTeamId());
+			if(opHackathon.isPresent() && opTeam.isPresent()) {
+				MyHackathonrow row = new MyHackathonrow();
+				row.setHackathon(opHackathon.get());
+				row.setTeamId(opTeam.get().getHackathonTeamId());
+				row.setTeamName(opTeam.get().getTeamName());
+				row.setLeader(user.getUserId().equals(opTeam.get().getTeamLeaderId()));
+				row.setRoleTitle(member.getRoleTitle());
+				row.setTeamSize((int) hackathonTeamMembersRepository.countByTeamId(opTeam.get().getHackathonTeamId()));
+				row.setPendingInvites((int) hackathonTeamInviteRepository.countByTeamIdAndInviteStatus(opTeam.get().getHackathonTeamId(), "PENDING"));
+				row.setSubmissionEnabled(isSubmissionOpen(opHackathon.get(), today));
+				rowMap.put(opHackathon.get().getHackathonId(), row);
+			}
+		}
+		
+		model.addAttribute("myHackathons", rowMap.values());
+		model.addAttribute("totalCount", rowMap.size());
+		
+		return "participant/MyHackathons";
+		
+	}
+	
 	@GetMapping("/participant/hackathon/{hackathonId}")
 	public String hackathonDetails(Integer hackathonId,String joined,String success,String error, HttpSession session, Model model) {
 		
@@ -144,8 +223,8 @@ public class ParticipantController {
 			alreadyInTeam = hackathonTeamRepository.existsByHackathonIdAndTeamLeaderId(hackathonId, user.getUserId())
 					|| hackathonTeamMembersRepository.existsByHackathonIdAndMemberId(hackathonId, user.getUserId());
 			teamId = findTeamIdForUser(hackathonId, user.getUserId());
-			pendingInvite = hackathonTeamInviteRepository.
-					findFirstByHackathonIdAndInviteduserIdAndInviteStatus(hackathonId, user.getUserId(), "PENDING")
+			pendingInvite = hackathonTeamInviteRepository
+					.findFirstByHackathonIdAndInvitedUserIdAndInviteStatus(hackathonId, user.getUserId(), "PENDING")
 					.orElse(null);
 		}
 		
@@ -176,6 +255,77 @@ public class ParticipantController {
 		}
 		Optional<HackathonTeamEntity> leaderTeam = hackathonTeamRepository.findFirstByHackathonIdAndTeamLeaderId(hackathonId, userId);
 		return leaderTeam.map(HackathonTeamEntity::getHackathonTeamId).orElse(null);
+	}
+	
+	private boolean isSubmissionOpen(HackathonEntity hackathon, LocalDate today) {
+		if(hackathon == null || hackathon.getSubmissionDeadline() == null) {
+			return false;
+		}
+		return !today.isAfter(hackathon.getSubmissionDeadline());
+	}
+	
+	public static class MyHackathonrow() {
+		private HackathonEntity hackathon;
+		private Integer teamId;
+		private String teamName;
+		private boolean leader;
+		private String roleTitle;
+		private int teamSize;
+		private int pendingInvites;
+		private boolean submissionEnabled;
+		
+		
+		public HackathonEntity getHackathon() {
+			return hackathon;
+		}
+		public void setHackathon(HackathonEntity hackathon) {
+			this.hackathon = hackathon;
+		}
+		public Integer getTeamId() {
+			return teamId;
+		}
+		public void setTeamId(Integer teamId) {
+			this.teamId = teamId;
+		}
+		public String getTeamName() {
+			return teamName;
+		}
+		public void setTeamName(String teamName) {
+			this.teamName = teamName;
+		}
+		public boolean isLeader() {
+			return leader;
+		}
+		public void setLeader(boolean leader) {
+			this.leader = leader;
+		}
+		public String getRoleTitle() {
+			return roleTitle;
+		}
+		public void setRoleTitle(String roleTitle) {
+			this.roleTitle = roleTitle;
+		}
+		public int getTeamSize() {
+			return teamSize;
+		}
+		public void setTeamSize(int teamSize) {
+			this.teamSize = teamSize;
+		}
+		public int getPendingInvites() {
+			return pendingInvites;
+		}
+		public void setPendingInvites(int pendingInvites) {
+			this.pendingInvites = pendingInvites;
+		}
+		public boolean isSubmissionEnabled() {
+			return submissionEnabled;
+		}
+		public void setSubmissionEnabled(boolean submissionEnabled) {
+			this.submissionEnabled = submissionEnabled;
+		}
+		
+		
+		
 	}
 
 }

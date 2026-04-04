@@ -25,6 +25,8 @@ public class HackathonTeamInviteEntity {
 	String roleTitle;
 	String inviteStatus;
 	LocalDate createdAt;
+	
+	
 	public Integer getHackathonTeamInviteId() {
 		return hackathonTeamInviteId;
 	}

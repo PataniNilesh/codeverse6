@@ -17,6 +17,8 @@ public interface HackathonTeamRepository extends JpaRepository<HackathonTeamEnti
 	
 	long countByHackathonId(Integer hackathonId);
 	
+	List<HackathonTeamEntity> findByTeamLeaderId(Integer teamLeaderId);
+	
 	
 
 }
