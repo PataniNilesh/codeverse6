@@ -373,22 +373,7 @@ body::before {
      Replace this entire block with:
      <%@ include file="ParticipantTopNav.jsp" %>
      ═══════════════════════════════════════════════════════ -->
-<nav class="topnav">
-  <a href="/participant/home" class="topnav-logo">
-    <div class="logo-box">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-        stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-      </svg>
-    </div>
-    INTERNS HACK
-  </a>
-  <div class="topnav-links">
-    <a href="/participant/home">Explore</a>
-    <a href="#" class="active">My Hackathons</a>
-    <a href="/participant/profile">Profile</a>
-  </div>
-</nav>
+ <%@ include file="ParticipantTopNav.jsp" %>
 <!-- ═══ END TOP NAV ══════════════════════════════════════ -->
 
 
@@ -418,7 +403,7 @@ body::before {
         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
       </svg>
-      <strong>4</strong> Joined
+      <strong>${totalCount}</strong> Joined
     </div>
   </div>
 
@@ -440,303 +425,124 @@ body::before {
          </c:otherwise>
        </c:choose>
        ═══════════════════════════════════════════════════ -->
-  <div class="grid">
-
-    <!-- ─── CARD 1 — Leader, Ongoing, submission enabled ─── -->
-    <article class="card">
-      <div class="card-top">
-        <!--
-          Replace static title with: ${m.hackathon.title}
-          Replace role badge conditionally:
-          <span class="role-badge ${m.leader ? 'role-leader' : 'role-member'}">
-            ${m.leader ? 'Team Leader' : m.roleTitle}
-          </span>
-        -->
-        <div class="card-title">Global AI Hackathon 2025</div>
-        <span class="role-badge role-leader">Team Leader</span>
-      </div>
-
-      <div class="chip-row">
-        <!--
-          Replace static chips with:
-          <span class="chip chip-${fn:toLowerCase(m.hackathon.status)}">${m.hackathon.status}</span>
-          <span class="chip">${m.hackathon.eventType}</span>
-          <span class="chip">${m.teamSize} members</span>
-          <span class="chip">${m.pendingInvites} pending invites</span>
-        -->
-        <span class="chip chip-ongoing">ONGOING</span>
-        <span class="chip">Online</span>
-        <span class="chip">3 members</span>
-        <span class="chip">1 pending invite</span>
-      </div>
-
-      <!-- Replace with: ${m.hackathon.description} -->
-      <p class="card-desc">
-        Build next-generation AI-powered applications. Push boundaries,
-        form incredible teams, and compete for prizes worth millions.
-      </p>
-
-      <div class="card-divider"></div>
-
-      <div class="actions">
-        <!--
-          Replace hackathonId with: ${m.hackathon.hackathonId}
-        -->
-        <a class="btn btn-details" href="/participant/hackathon/1">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          View Details
-        </a>
-
-        <a class="btn btn-team" href="/participant/hackathon/1/team">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          Manage Team
-        </a>
-
-        <!--
-          Submission button logic — wrap with:
-          <c:if test="${not empty m.teamId}">
-            <c:choose>
-              <c:when test="${m.submissionEnabled}">
-                <a class="btn btn-submission" href="/participant/hackathon/${m.hackathon.hackathonId}/submission">Submission</a>
-              </c:when>
-              <c:otherwise>
-                <span class="btn btn-disabled" title="Submission opens after registration end date">Submission</span>
-              </c:otherwise>
-            </c:choose>
-          </c:if>
-        -->
-        <a class="btn btn-submission" href="/participant/hackathon/1/submission">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          Submission
-        </a>
-
-        <!--
-          Leaderboard button — wrap with:
-          <c:if test="${m.hackathon.leaderboardPublished}">
-            <a class="btn btn-leaderboard" href="/participant/leaderboard/${m.hackathon.hackathonId}">Leaderboard</a>
-          </c:if>
-        -->
-        <a class="btn btn-leaderboard" href="/participant/leaderboard/1">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
-            <line x1="6" y1="20" x2="6" y2="14"/>
-          </svg>
-          Leaderboard
-        </a>
-      </div>
-    </article>
-    <!-- ─── END CARD 1 ─────────────────────────────────── -->
-
-
-    <!-- ─── CARD 2 — Member, Upcoming, submission disabled ─ -->
-    <article class="card">
-      <div class="card-top">
-        <div class="card-title">Smart Cities Hackathon 2025</div>
-        <span class="role-badge role-member">Member</span>
-      </div>
-
-      <div class="chip-row">
-        <span class="chip chip-upcoming">UPCOMING</span>
-        <span class="chip">Hybrid</span>
-        <span class="chip">4 members</span>
-        <span class="chip">0 pending invites</span>
-      </div>
-
-      <p class="card-desc">
-        Design digital solutions for urban challenges — transport, energy,
-        waste management and civic engagement.
-      </p>
-
-      <div class="card-divider"></div>
-
-      <div class="actions">
-        <a class="btn btn-details" href="/participant/hackathon/2">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          View Details
-        </a>
-        <a class="btn btn-team" href="/participant/hackathon/2/team">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          Manage Team
-        </a>
-        <!-- Submission disabled example -->
-        <span class="btn btn-disabled" title="Submission opens after registration end date">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-          Submission
-        </span>
-        <!-- No leaderboard for upcoming — omit that button -->
-      </div>
-    </article>
-    <!-- ─── END CARD 2 ─────────────────────────────────── -->
-
-
-    <!-- ─── CARD 3 — Leader, Completed, leaderboard live ── -->
-    <article class="card">
-      <div class="card-top">
-        <div class="card-title">FinTech Innovation Sprint</div>
-        <span class="role-badge role-leader">Team Leader</span>
-      </div>
-
-      <div class="chip-row">
-        <span class="chip chip-completed">COMPLETED</span>
-        <span class="chip">Online</span>
-        <span class="chip">2 members</span>
-        <span class="chip">0 pending invites</span>
-      </div>
-
-      <p class="card-desc">
-        Reimagine financial services through open banking APIs,
-        blockchain ledgers and ML-powered fraud detection.
-      </p>
-
-      <div class="card-divider"></div>
-
-      <div class="actions">
-        <a class="btn btn-details" href="/participant/hackathon/3">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          View Details
-        </a>
-        <a class="btn btn-team" href="/participant/hackathon/3/team">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          Manage Team
-        </a>
-        <a class="btn btn-submission" href="/participant/hackathon/3/submission">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          Submission
-        </a>
-        <a class="btn btn-leaderboard" href="/participant/leaderboard/3">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
-            <line x1="6" y1="20" x2="6" y2="14"/>
-          </svg>
-          Leaderboard
-        </a>
-      </div>
-    </article>
-    <!-- ─── END CARD 3 ─────────────────────────────────── -->
-
-
-    <!-- ─── CARD 4 — Member, Ongoing, no leaderboard yet ── -->
-    <article class="card">
-      <div class="card-top">
-        <div class="card-title">Open Source Sprint — India</div>
-        <span class="role-badge role-member">Member</span>
-      </div>
-
-      <div class="chip-row">
-        <span class="chip chip-ongoing">ONGOING</span>
-        <span class="chip">Remote</span>
-        <span class="chip">5 members</span>
-        <span class="chip">2 pending invites</span>
-      </div>
-
-      <p class="card-desc">
-        Contribute meaningful features and fixes to popular open-source
-        projects judged by maintainers and the community.
-      </p>
-
-      <div class="card-divider"></div>
-
-      <div class="actions">
-        <a class="btn btn-details" href="/participant/hackathon/4">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          View Details
-        </a>
-        <a class="btn btn-team" href="/participant/hackathon/4/team">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-          Manage Team
-        </a>
-        <a class="btn btn-submission btn-wide" href="/participant/hackathon/4/submission">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-          Submission
-        </a>
-        <!-- Leaderboard not yet published — omit -->
-      </div>
-    </article>
-    <!-- ─── END CARD 4 ─────────────────────────────────── -->
-
-  </div>
+	<c:choose>
+		<!-- EMPTY STATE -->
+		<c:when test="${empty myHackathons}">
+			<div class="empty-state">
+			    <div class="empty-icon">
+			      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+			        stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+			        <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+			      </svg>
+			    </div>
+			    <div class="empty-title">No joined hackathons yet</div>
+			    <div class="empty-sub">
+			      Join a hackathon from the home page<br>and it will appear here.
+			    </div>
+			    <a href="/participant/home" class="empty-cta">
+			      Browse Hackathons
+			      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
+			        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+			        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+			      </svg>
+			    </a>
+		  	</div>
+		</c:when>
+		
+		<!-- GRID -->
+		<c:otherwise>
+           <div class="grid">
+             <c:forEach items="${myHackathons}" var="m">
+             	<article class="card">
+             		<div class="card-top">
+             			<div class="card-title">
+             				${m.hackathon.title}
+             			</div>
+             			<span class="role-badge ${m.leader ? 'role-leader' : 'role-member'}">
+				            ${m.leader ? 'Team Leader' : m.roleTitle}
+			          	</span>
+             		</div>
+             		
+             		<!-- CHIPS -->
+             		<div class="chip-row">
+             			<span class="chip chip-${fn:toLowerCase(m.hackathon.status)}">${m.hackathon.status}</span>
+			          	<span class="chip">${m.hackathon.eventType}</span>
+			          	<span class="chip">${m.teamSize} members</span>
+			          	<span class="chip">${m.pendingInvites} pending invites</span>
+             		</div>
+             		
+             		<!-- DESCRIPTION -->
+             		<p class="card-desc">
+		        		${m.hackathon.description}
+			      	</p>
+			      	
+			      	<div class="card-divider"></div>
+			      	
+			      	<!-- ACTIONS -->
+			      	<div class="actions">
+			      	
+			      		<!-- VIEW DETAILS -->
+			      		<a class="btn btn-details" href="/participant/hackathon/${m.hackathon.hackathonId}">
+				          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+				            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+				          </svg>
+				          View Details
+				        </a>
+				        
+				        <!-- TEAM -->
+				        <a class="btn btn-team" href="/participant/hackathon/${m.hackathon.hackathonId}/team">
+				          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white"
+				            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+				            <circle cx="9" cy="7" r="4"/>
+				            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+				            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+				          </svg>
+				          Manage Team
+				        </a>
+				        
+				        <!-- SUBMISSION -->
+				        <c:if test="${not empty m.teamId}">
+				        	<c:choose>
+		        				<c:when test="${m.submissionEnabled}">
+		        					<a class="btn btn-submission" href="/participant/hackathon/${m.hackathon.hackathonId}/submission">
+							          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+							            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+							          </svg>
+							          Submission
+							        </a>
+			              		</c:when>
+				              	
+				              	<c:otherwise>
+				                	<span class="btn btn-disabled" title="Submission opens after registration end date">Submission</span>
+		              			</c:otherwise>
+				        	</c:choose>
+				        </c:if>
+				        
+				        <!-- LEADERBOARD -->
+				        <c:if test="${m.hackathon.leaderboardPublished}">
+			            	<a class="btn btn-leaderboard" href="/participant/leaderboard/${m.hackathon.hackathonId}">
+					          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+					            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+					            <line x1="6" y1="20" x2="6" y2="14"/>
+					          </svg>
+					          Leaderboard
+					        </a>
+			          	</c:if>
+			          </div>	
+             	</article>
+             </c:forEach>
+           </div>
+       	</c:otherwise>    
+	</c:choose>
+	
   <!-- ═══ END CARD GRID ════════════════════════════════════ -->
 
 
-  <!-- ═══════════════════════════════════════════════════
-       EMPTY STATE
-       Show this when myHackathons is empty.
-       Wrap with: <c:when test="${empty myHackathons}"> ... </c:when>
-       ═══════════════════════════════════════════════════ -->
-  <!--
-  <div class="empty-state">
-    <div class="empty-icon">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
-        stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-      </svg>
-    </div>
-    <div class="empty-title">No joined hackathons yet</div>
-    <div class="empty-sub">
-      Join a hackathon from the home page<br>and it will appear here.
-    </div>
-    <a href="/participant/home" class="empty-cta">
-      Browse Hackathons
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white"
-        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-      </svg>
-    </a>
-  </div>
-  -->
 
 </div><!-- /page -->
 

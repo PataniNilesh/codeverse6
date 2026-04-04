@@ -264,7 +264,7 @@ public class ParticipantController {
 		return !today.isAfter(hackathon.getSubmissionDeadline());
 	}
 	
-	public static class MyHackathonrow() {
+	public static class MyHackathonrow {
 		private HackathonEntity hackathon;
 		private Integer teamId;
 		private String teamName;
