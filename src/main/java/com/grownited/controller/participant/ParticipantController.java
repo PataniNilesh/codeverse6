@@ -246,6 +246,43 @@ public class ParticipantController {
 		return "participant/HackathonDetails";
 	}
 	
+	@PostMapping("participant/hackathon/{hackathonId}/join")
+	@Transactional
+	public String joinHackathon(Integer hackathonId, HttpSession session) {
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		if(user == null) {
+			return "redirect:/login";
+		}
+		
+		Optional<HackathonEntity> opHackathon = hackathonRepository.findById(hackathonId);
+		if(opHackathon.isEmpty()) {
+			return "redirect:/participant/home";
+		}
+		
+		HackathonEntity hackathon = opHackathon.get();
+		LocalDate today = LocalDate.now();
+		boolean registrationOpen = hackathon.getRegistrationStartDate() != null && hackathon.getRegistrationEndDate() != null 
+				&& !today.isBefore(hackathon.getRegistrationStartDate()) && !today.isAfter(hackathon.getRegistrationEndDate());
+		
+		if(!registrationOpen) {
+			return "redirect:/participant/hackathon/" + hackathonId + "?error=registrationClosed";
+		}
+		
+		boolean alreadyRegistered = hackathonParticipantRepository.existsByHackathonIdAndParticipantId(hackathonId, user.getUserId());
+		if(alreadyRegistered) {
+			return "redirect:/participant/hackathon/" + hackathonId + "?error=alreadyRegistered";
+		}
+		
+		HackathonParticipantEntity participant = new HackathonParticipantEntity();
+		participant.setHackathonId(hackathonId);
+		participant.setParticipantId(user.getUserId());
+		participant.setJoinedDate(today);
+		hackathonParticipantRepository.save(participant);
+		
+		return "redirect:/participant/hackathon/" + hackathonId + "?joined=true";
+		
+	}
+	
 	private Integer findTeamIdForUser(Integer hackathonId, Integer userId) {
 		
 		Optional<HackathonTeamMembersEntity> memberRow = hackathonTeamMembersRepository.findFirstByHackathonIdAndMemberId(hackathonId, userId);
