@@ -387,6 +387,44 @@ public class ParticipantController {
 		return "participant/ManageTeam";
 	}
 	
+	@PostMapping("participant/hackathon/{hackathonId}/team/create")
+	@Transactional
+	public String createTeam(Integer hackathonId ,String teamName, HttpSession session) {
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		if(user == null) {
+			return "redirect:/login";
+		}
+		
+		if(!hackathonParticipantRepository.existsByHackathonIdAndParticipantId(hackathonId, user.getUserId())) {
+			return "redirect:/participant/hackathon/" + hackathonId + "?error=notRegistered";
+		}
+		
+		Integer existingTeamId = findTeamIdForUser(hackathonId, user.getUserId());
+		if(existingTeamId != null) {
+			return "redirect:/participant/hackathon/" + hackathonId + "/team?error=alreadyInHackathon";
+		}
+		
+		if(!StringUtils.hasText(teamName)) {
+			return "redirect:participant/hackathon/" + hackathonId + "/team?error=invalidTeamName";
+		}
+		
+		HackathonTeamEntity team = new HackathonTeamEntity();
+		team.setHackathonId(hackathonId);
+		team.setTeamLeaderId(user.getUserId());
+		team.setTeamStatus("QUALIFY");
+		team.setTeamName(teamName.trim());
+		hackathonTeamRepository.save(team);
+		
+		HackathonTeamMembersEntity leaderMember = new HackathonTeamMembersEntity();
+		leaderMember.setTeamId(team.getHackathonTeamId());
+		leaderMember.setHackathonId(hackathonId);
+		leaderMember.setMemberId(user.getUserId());
+		leaderMember.setRoleTitle("TEAM_LEADER");
+		hackathonTeamMembersRepository.save(leaderMember);
+		
+		return "redirect:/participant/hackathon/" + hackathonId + "/team?success=teamCreated";
+	}
+	
 	private Integer findTeamIdForUser(Integer hackathonId, Integer userId) {
 		
 		Optional<HackathonTeamMembersEntity> memberRow = hackathonTeamMembersRepository.findFirstByHackathonIdAndMemberId(hackathonId, userId);
