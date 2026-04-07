@@ -11,8 +11,11 @@ import java.util.List;
 @Repository
 public interface HackathonTeamInviteRepository extends JpaRepository<HackathonTeamInviteEntity, Integer>{
 	
+	List<HackathonTeamInviteEntity> findByTeamIdOrderByHackathonTeamInviteIdDesc(Integer teamId);
+	
 	Optional<HackathonTeamInviteEntity> findFirstByHackathonIdAndInvitedUserIdAndInviteStatus(Integer hackathonId, 
 			Integer invitedUserId, String inviteStatus);
+	
 	
 	long countByTeamIdAndInviteStatus(Integer teamId, String inviteStatus);
 

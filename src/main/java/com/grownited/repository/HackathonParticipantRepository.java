@@ -12,6 +12,8 @@ public interface HackathonParticipantRepository extends JpaRepository<HackathonP
 	
 	boolean existsByHackathonIdAndParticipantId(Integer hackathonId, Integer participantId);
 	
+	List<HackathonParticipantEntity> findByHackathonId(Integer hackathonId);
+	
 	List<HackathonParticipantEntity> findByParticipantId(Integer participantId);
 
 }

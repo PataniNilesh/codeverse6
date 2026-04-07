@@ -1,10 +1,13 @@
 package com.grownited.controller.participant;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -281,6 +284,107 @@ public class ParticipantController {
 		
 		return "redirect:/participant/hackathon/" + hackathonId + "?joined=true";
 		
+	}
+	
+	@PostMapping("participant/hackathon/{hackathonId}/team")
+	@Transactional
+	public String manageTeam(Integer hackathonId, HttpSession session, Model model, String success, String error) {
+		
+		UserEntity user = (UserEntity) session.getAttribute("user");
+		if(user == null) {
+			return "redirect:/login";
+		}
+		
+		Optional<HackathonEntity> opHackathon = hackathonRepository.findById(hackathonId);
+		if(opHackathon.isEmpty()) {
+			return "redirect:/particiapnt/home";
+		}
+		
+		Integer teamId = findTeamIdForUser(hackathonId, user.getUserId());
+		boolean joinedHackathon = hackathonParticipantRepository.existsByHackathonIdAndParticipantId(hackathonId, user.getUserId());
+		
+		if(!joinedHackathon) {
+			return "redirect/participant/hackathon/" + hackathonId + "?error=notRegistered";
+		}
+		
+		boolean hasTeam = teamId != null;
+		boolean isTeamLeader = false;
+		HackathonTeamEntity team = null;
+		HackathonTeamInviteEntity pendingInvite = null;
+		HackathonTeamEntity pendingInviteTeam = null;
+		List<HackathonTeamMembersEntity> teamMembers = new ArrayList<>();
+		Map<Integer, UserEntity> memberMap = new HashMap<>();
+		List<UserEntity> participantUsers = new ArrayList<>();
+		List<HackathonTeamInviteEntity> inviteList = new ArrayList<>();
+		
+		
+		if(hasTeam) {
+			Optional<HackathonTeamEntity> opTeam = hackathonTeamRepository.findById(teamId);
+			if(opTeam.isEmpty()) {
+				return "redirect:/participant/hakcathon/" + hackathonId + "?error=notRegistered";
+			}
+			team = opTeam.get();
+			isTeamLeader = user.getUserId().equals(team.getTeamLeaderId());
+			
+			teamMembers = hackathonTeamMembersRepository.findByTeamIdOrderByHackathonTeamMemberIdAsc(teamId);
+			for(HackathonTeamMembersEntity member : teamMembers) {
+				Optional<UserEntity> opMember = userRepository.findById(member.getMemberId());
+				opMember.ifPresent(userEntity -> memberMap.put(member.getMemberId(), userEntity));
+			}
+			
+			List<Integer> existingMemberIds = teamMembers.stream().map(HackathonTeamMembersEntity::getMemberId)
+					.collect(Collectors.toList());
+			List<Integer> joinedParticipantIds = hackathonParticipantRepository.findByHackathonId(hackathonId)
+					.stream().map(HackathonParticipantEntity::getParticipantId).collect(Collectors.toList());
+			participantUsers = userRepository.findAllById(joinedParticipantIds).stream()
+					.filter(u -> "PARTICIPANT".equals(u.getRole()))
+					.filter(u -> u.getActive() != null && u.getActive())
+					.filter(u -> !existingMemberIds.contains(u.getUserId()))
+					.filter(u -> !u.getUserId().equals(user.getUserId()))
+					.filter(u -> !hackathonTeamMembersRepository.existsByHackathonIdAndMemberId(hackathonId, user.getUserId()))
+					.collect(Collectors.toList());
+			
+			inviteList = hackathonTeamInviteRepository.findByTeamIdOrderByHackathonTeamInviteIdDesc(teamId);
+		} else {
+			pendingInvite = hackathonTeamInviteRepository
+					.findFirstByHackathonIdAndInvitedUserIdAndInviteStatus(hackathonId, user.getUserId(), "PENDING")
+					.orElse(null);
+			if(pendingInvite != null && pendingInvite.getTeamId() != null) {
+				pendingInviteTeam = hackathonTeamRepository.findById(pendingInvite.getTeamId()).orElse(null);
+				
+			}
+		}
+		
+		List<HackathonTeamEntity> availableTeams = hackathonTeamRepository.findByHackathonId(hackathonId);
+		availableTeams = availableTeams.stream().filter(t -> {
+			long size = hackathonTeamMembersRepository.countByTeamId(t.getHackathonTeamId());
+			return opHackathon.get().getMaxTeamSize() == null || size < opHackathon.get().getMaxTeamSize();
+		}).collect(Collectors.toList());
+		if(hasTeam) {
+			Integer myTeamId = teamId;
+			availableTeams = availableTeams.stream().filter(t -> !t.getHackathonTeamId().equals(myTeamId)).collect(Collectors.toList());		
+		}
+		
+		model.addAttribute("hackathon", opHackathon.get());
+		model.addAttribute("teamId", teamId);
+		model.addAttribute("teamMembers", teamMembers);
+		model.addAttribute("memberMap", memberMap);
+		model.addAttribute("participantUsers", participantUsers);
+		model.addAttribute("inviteList", inviteList);
+		model.addAttribute("teams", team);
+		model.addAttribute("isTeamLeader", isTeamLeader);
+		model.addAttribute("hasTeam", hasTeam);
+		model.addAttribute("pendingInvite", pendingInvite);
+		model.addAttribute("pendingInviteTeam", pendingInviteTeam);
+		model.addAttribute("availableTeams", availableTeams);
+		model.addAttribute("teamSizeCount", teamMembers.size());
+		model.addAttribute("teamMaxSize", opHackathon.get().getMaxTeamSize());
+		boolean inviteAllowed = opHackathon.get().getRegistrationEndDate() == null 
+				|| !LocalDate.now().isAfter(opHackathon.get().getRegistrationEndDate());
+		model.addAttribute("inviteAllowed", inviteAllowed);
+		model.addAttribute("succes", success);
+		model.addAttribute("error", error);			
+		return "participant/ManageTeam";
 	}
 	
 	private Integer findTeamIdForUser(Integer hackathonId, Integer userId) {
