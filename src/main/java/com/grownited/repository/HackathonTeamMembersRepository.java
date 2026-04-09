@@ -15,6 +15,8 @@ public interface HackathonTeamMembersRepository extends JpaRepository<HackathonT
 	
 	Optional<HackathonTeamMembersEntity> findFirstByHackathonIdAndMemberId(Integer hackathonId, Integer memberId);
 	
+	Optional<HackathonTeamMembersEntity> findFirstByTeamIdAndMemberId(Integer teamId, Integer memberId);
+	
 	List<HackathonTeamMembersEntity> findByTeamIdOrderByHackathonTeamMemberIdAsc(Integer teamId);
 	
 	List<HackathonTeamMembersEntity> findByMemberId(Integer memberId);
