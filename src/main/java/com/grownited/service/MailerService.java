@@ -127,5 +127,32 @@ public class MailerService {
 		}
 	}
 	
+	public void sendJudgeInviteMail(UserEntity user, String tempPassword) {
+		MimeMessage message = javaMailSender.createMimeMessage();
+		try {
+			String body = "<div style='font-family:Arial,sans-serif;line-height:1.6'>"
+					+ "<h2>CodeVerse Judge Invitation</h2>"
+					+ "<p>Hello " + safe(user.getFirstName()) + ",</p>"
+					+ "<p>You have been invited as a <b>Judge</b> in CodeVerse.</p>"
+					+ "<p><b>Login Email:</b> " + safe(user.getEmail()) + "<br/>"
+					+ "<b>Temporary Password:</b> " + safe(tempPassword) + "</p>"
+					+ "<p>Please login and change your password immediately.</p>"
+					+ "<p><a href='http://localhost:9797/login'>Login to CodeVerse</a></p>"
+					+ "<p>Thanks,<br/>CodeVerse Team</p></div>";
+
+			MimeMessageHelper helper = new MimeMessageHelper(message, true);
+			helper.setTo(user.getEmail());
+			helper.setSubject("CodeVerse - Judge Invitation");
+			helper.setText(body, true);
+			javaMailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String safe(String text) {
+		return text == null ? "" : text;
+	}
+	
 
 }
