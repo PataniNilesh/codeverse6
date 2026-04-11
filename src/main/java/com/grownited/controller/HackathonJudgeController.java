@@ -1,0 +1,91 @@
+package com.grownited.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import com.grownited.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.grownited.entity.HackathonEntity;
+import com.grownited.entity.HackathonJudgeEntity;
+import com.grownited.entity.UserEntity;
+import com.grownited.repository.HackathonJudgeRepository;
+import com.grownited.repository.HackathonRepository;
+
+@Controller
+public class HackathonJudgeController {
+
+	@Autowired
+    UserRepository userRepository;
+	
+	@Autowired
+	HackathonJudgeRepository hackathonJudgeRepository;
+	
+	@Autowired
+	HackathonRepository hackathonRepository;
+
+    
+	@GetMapping("manageHackathonJudge")
+	public String manageHackathonJudge(Integer hackathonId, String success, String error, Model model) {
+
+		Optional<HackathonEntity> opHackathon = hackathonRepository.findById(hackathonId);
+		if (opHackathon.isEmpty()) {
+			return "redirect:/listHackathon";
+		}
+		
+		List<HackathonJudgeEntity> assignedJudges = hackathonJudgeRepository.findByHackathonId(hackathonId);
+		Set<Integer> assignedUserIds = assignedJudges.stream().map(HackathonJudgeEntity::getUserId).collect(Collectors.toSet());
+		
+		
+		Map<Integer, UserEntity> judgeMap = new HashMap<>();
+		for(HackathonJudgeEntity assignment : assignedJudges) {
+			userRepository.findById(assignment.getUserId()).ifPresent(user -> judgeMap.put(user.getUserId(), user));
+		}
+		
+		List<UserEntity> availableJudges = userRepository.findByRole("JUDGE").stream()
+				.filter(j ->j.getActive() != null && j.getActive())
+				.filter(j -> assignedUserIds.contains(j.getUserId())).collect(Collectors.toList());
+		
+		model.addAttribute("hackathon", opHackathon.get());
+		model.addAttribute("assignedJudges", assignedJudges);
+		model.addAttribute("judgeMap", judgeMap);
+		model.addAttribute("availableJudges", availableJudges);
+		model.addAttribute("success", success);
+		model.addAttribute("error", error);
+		return "ManageHackathonJudge";
+	}
+	
+	@PostMapping("saveHackathonJudge")
+	public String saveHackathonJudge(Integer hackathonId, Integer userId) {
+		Optional<HackathonEntity> opHackathon = hackathonRepository.findById(hackathonId);
+		Optional<UserEntity> opJudge = userRepository.findById(userId);
+		if (opHackathon.isEmpty() || opJudge.isEmpty() || !"JUDGE".equals(opJudge.get().getRole())) {
+			return "redirect:/manageHackathonJudge?hackathonId=" + hackathonId + "&error=invalidJudge";
+		}
+		
+		boolean duplicate = hackathonJudgeRepository.existsByHackathonIdAndUserId(hackathonId, userId);
+		if (duplicate) {
+			return "redirect:/manageHackathonJudge?hackathonId=" + hackathonId + "&error=alreadyAssigned";
+		}
+		
+		HackathonJudgeEntity assign = new HackathonJudgeEntity();
+		assign.setHackathonId(hackathonId);
+		assign.setUserId(userId);
+		hackathonJudgeRepository.save(assign);
+		return "redirect:/manageHackathonJudge?hackathonId=" + hackathonId + "&success=added";
+		
+	}
+	
+	@GetMapping("deleteHackathonJudge")
+	public String deleteHackathonJudge(Integer hackathonJudgeId, Integer hackathonId) {
+		hackathonJudgeRepository.deleteById(hackathonJudgeId);
+		return "redirect:/manageHackathonJudge?hackathonId=" + hackathonId + "&success=removed";
+	}
+}
