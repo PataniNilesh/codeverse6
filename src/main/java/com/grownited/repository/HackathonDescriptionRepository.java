@@ -1,5 +1,6 @@
 package com.grownited.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,8 @@ import com.grownited.entity.HackathonDescriptionEntity;
 
 @Repository
 public interface HackathonDescriptionRepository extends JpaRepository<HackathonDescriptionEntity, Integer> {
+	
+	List<HackathonDescriptionEntity> findByHackathonId(Integer hackathonId);
 	
 	Optional<HackathonDescriptionEntity> findFirstByHackathonId(Integer hackathonId);
 

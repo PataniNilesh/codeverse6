@@ -9,6 +9,8 @@ import com.grownited.entity.HackathonPrizeEntity;
 
 @Repository
 public interface HackathonPrizeRepository extends JpaRepository<HackathonPrizeEntity, Integer>{
+	
+	List<HackathonPrizeEntity> findByHackathonId(Integer hackathonId);
 
 	List<HackathonPrizeEntity> findByHackathonIdOrderByHackathonPrizeIdAsc(Integer hackathonId);
 	
