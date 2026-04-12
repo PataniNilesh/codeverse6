@@ -20,6 +20,7 @@ import com.grownited.controller.AdminController;
 import com.grownited.entity.HackathonDescriptionEntity;
 import com.grownited.entity.HackathonEntity;
 import com.grownited.entity.HackathonParticipantEntity;
+import com.grownited.entity.HackathonPrizeEntity;
 import com.grownited.entity.HackathonSubmissionEntity;
 import com.grownited.entity.HackathonTeamEntity;
 import com.grownited.entity.HackathonTeamInviteEntity;
@@ -32,8 +33,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class ParticipantController {
 
-    private final AdminController adminController;
-
+    
 
 	@Autowired
     UserRepository userRepository;
@@ -61,6 +61,14 @@ public class ParticipantController {
 	
 	@Autowired
 	HackathonSubmissionRepository hackathonSubmissionRepository;
+	
+	@Autowired
+	HackathonPrizeRepository hackathonPrizeRepository;
+
+
+    ParticipantController(HackathonPrizeRepository hackathonPrizeRepository) {
+        this.hackathonPrizeRepository = hackathonPrizeRepository;
+    }
 
 	
 	
@@ -219,6 +227,7 @@ public class ParticipantController {
 		
 		HackathonEntity hackathon = opHackathon.get();
 		Optional<HackathonDescriptionEntity> description = hackathonDescriptionReposiotry.findFirstByHackathonId(hackathonId);
+		List<HackathonPrizeEntity> prizes = hackathonPrizeRepository.findByHackathonIdOrderByHackathonPrizeIdAsc(hackathonId);
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		
 		LocalDate today = LocalDate.now();
@@ -241,6 +250,7 @@ public class ParticipantController {
 		
 		model.addAttribute("hackathon", hackathon);
 		model.addAttribute("hackathonDescription", description.orElse(null));
+		model.addAttribute("prizeList", prizes);
 		model.addAttribute("registrationOpen", registrationOpen);
 		model.addAttribute("alreadyRegistered", alreadyRegistered);
 		model.addAttribute("alreadyInTeam", alreadyInTeam);
@@ -251,7 +261,7 @@ public class ParticipantController {
 		model.addAttribute("joined", joined);
 		model.addAttribute("success", success);
 		model.addAttribute("error", error);
-		
+		model.addAttribute("leaderboardAvailable", Boolean.TRUE.equals(hackathon.getLeaderboardPublished()));
 
 		
 		return "participant/HackathonDetails";

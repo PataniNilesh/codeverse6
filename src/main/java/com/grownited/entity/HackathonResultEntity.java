@@ -17,12 +17,10 @@ public class HackathonResultEntity {
 	Integer hackathonId;
 	Integer judgeId;
 	Integer teamId;
-	String innovation;
-	String implementation;
-	String codingStandard;
+	Integer innovation;
+	Integer implementation;
+	Integer codingStandard;
 	String round;
-	
-	
 	public Integer getHackathonResultId() {
 		return hackathonResultId;
 	}
@@ -47,22 +45,22 @@ public class HackathonResultEntity {
 	public void setTeamId(Integer teamId) {
 		this.teamId = teamId;
 	}
-	public String getInnovation() {
+	public Integer getInnovation() {
 		return innovation;
 	}
-	public void setInnovation(String innovation) {
+	public void setInnovation(Integer innovation) {
 		this.innovation = innovation;
 	}
-	public String getImplementation() {
+	public Integer getImplementation() {
 		return implementation;
 	}
-	public void setImplementation(String implementation) {
+	public void setImplementation(Integer implementation) {
 		this.implementation = implementation;
 	}
-	public String getCodingStandard() {
+	public Integer getCodingStandard() {
 		return codingStandard;
 	}
-	public void setCodingStandard(String codingStandard) {
+	public void setCodingStandard(Integer codingStandard) {
 		this.codingStandard = codingStandard;
 	}
 	public String getRound() {
@@ -71,8 +69,9 @@ public class HackathonResultEntity {
 	public void setRound(String round) {
 		this.round = round;
 	}
-
-
+	
+	
+	
 	
 	
 }
