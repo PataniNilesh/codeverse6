@@ -13,6 +13,8 @@ public interface HackathonTeamInviteRepository extends JpaRepository<HackathonTe
 	
 	List<HackathonTeamInviteEntity> findByTeamIdOrderByHackathonTeamInviteIdDesc(Integer teamId);
 	
+	boolean existsByTeamIdAndInvitedUserIdAndInviteStatus(Integer teamId, Integer invitedUserId, String inviteStatus);
+	
 	boolean existsByHackathonIdAndInvitedUserIdAndInviteStatus(Integer hackathonId, Integer invitedUserId, String inviteStatus);
 	
 	boolean existsByTeamIdAndInvitedEmailAndInviteStatus(Integer teamId, String invitedEmail, String inviteStatus);

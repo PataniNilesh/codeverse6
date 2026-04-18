@@ -104,6 +104,14 @@
 			<artifactId>cloudinary-http44</artifactId>
 			<version>1.31.0</version> <!-- or use latest -->
 		</dependency>
+		
+				<!-- Source: https://mvnrepository.com/artifact/net.authorize/anet-java-sdk -->
+		<dependency>
+		    <groupId>net.authorize</groupId>
+		    <artifactId>anet-java-sdk</artifactId>
+		    <version>3.0.0</version>
+		    <scope>compile</scope>
+		</dependency>
 
 
 		 

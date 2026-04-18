@@ -810,11 +810,11 @@ to {
 			</div> INTERNS CODING FOR HACKATHON
 		</a>
 		<nav class="nav-links">
-			<a href="#">Explore</a> 
-			<a href="#">Leaderboard</a> 
+			<a href="participant/home">Explore</a> 
+			<a href="">Leaderboard</a> 
 			<c:if test="${empty sessionScope.user }">
 				<a href="/login">Login</a>
-				<a href="#" class="btn-primary"> Register <svg width="13"
+				<a href="signup" class="btn-primary"> Register <svg width="13"
 						height="13" viewBox="0 0 24 24" fill="none" stroke="white"
 						stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
 	        <line x1="5" y1="12" x2="19" y2="12" />
@@ -839,7 +839,7 @@ to {
 	<!-- HERO -->
 	<section class="hero">
 		<div class="hero-badge">
-			<span class="pulse-dot"></span> 200+ Hackathons Live Now
+			<span class="pulse-dot"></span> 1 Hackathons Live Now
 		</div>
 		<h1>
 			Find Your Next<br>
@@ -862,22 +862,22 @@ to {
 	<!-- STATS -->
 	<div class="stats">
 		<div class="stat">
-			<div class="stat-num">247</div>
+			<div class="stat-num">1</div>
 			<div class="stat-label">Active Events</div>
 		</div>
 		<div class="stat-divider"></div>
 		<div class="stat">
-			<div class="stat-num">Rs. 4.2Cr</div>
+			<div class="stat-num">Rs. 0</div>
 			<div class="stat-label">Prize Pool</div>
 		</div>
 		<div class="stat-divider"></div>
 		<div class="stat">
-			<div class="stat-num">18K+</div>
+			<div class="stat-num">10+</div>
 			<div class="stat-label">Participants</div>
 		</div>
 		<div class="stat-divider"></div>
 		<div class="stat">
-			<div class="stat-num">95%</div>
+			<div class="stat-num">100%</div>
 			<div class="stat-label">Free Entry</div>
 		</div>
 	</div>

@@ -33,7 +33,7 @@ public class AdminJudgeController {
 		return "NewJudge";
 	}
 	
-	@PostMapping
+	@PostMapping("saveJudge")
 	public String saveJudge(UserEntity userEntity, Model model) {
 		Optional<UserEntity> opUser = userRepository.findByEmail(userEntity.getEmail());
 		if (opUser.isPresent()) {
@@ -52,7 +52,7 @@ public class AdminJudgeController {
 		userRepository.save(userEntity);
 		
 		mailerService.sendJudgeInviteMail(userEntity, tempPassword);
-		return "redirect:/lsitJudge?invited=true";
+		return "redirect:/listJudge?invited=true";
 	}
 	
 	@GetMapping("listJudge")

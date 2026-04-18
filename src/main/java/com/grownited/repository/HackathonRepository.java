@@ -8,4 +8,9 @@ import com.grownited.entity.HackathonEntity;
 @Repository
 public interface HackathonRepository extends JpaRepository<HackathonEntity, Integer> {
 
+	long countByStatus(String status);
+	
+	long countByHackathonId(Integer hackathonId);
+	
+
 }

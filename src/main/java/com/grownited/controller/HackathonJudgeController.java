@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.grownited.entity.HackathonEntity;
 import com.grownited.entity.HackathonJudgeEntity;
@@ -33,7 +34,8 @@ public class HackathonJudgeController {
 
     
 	@GetMapping("manageHackathonJudge")
-	public String manageHackathonJudge(Integer hackathonId, String success, String error, Model model) {
+	public String manageHackathonJudge(@RequestParam Integer hackathonId, @RequestParam(required = false) String error,
+			@RequestParam(required = false) String success, Model model) {
 
 		Optional<HackathonEntity> opHackathon = hackathonRepository.findById(hackathonId);
 		if (opHackathon.isEmpty()) {
@@ -51,7 +53,7 @@ public class HackathonJudgeController {
 		
 		List<UserEntity> availableJudges = userRepository.findByRole("JUDGE").stream()
 				.filter(j ->j.getActive() != null && j.getActive())
-				.filter(j -> assignedUserIds.contains(j.getUserId())).collect(Collectors.toList());
+				.filter(j -> !assignedUserIds.contains(j.getUserId())).collect(Collectors.toList());
 		
 		model.addAttribute("hackathon", opHackathon.get());
 		model.addAttribute("assignedJudges", assignedJudges);

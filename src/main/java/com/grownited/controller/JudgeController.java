@@ -3,7 +3,6 @@ package com.grownited.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,13 +26,11 @@ import com.grownited.entity.HackathonSubmissionEntity;
 import com.grownited.entity.HackathonTeamEntity;
 import com.grownited.entity.UserEntity;
 import com.grownited.repository.*;
-import com.grownited.service.ForgetPasswordServiceImple;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class JudgeController {
 
-    private final ForgetPasswordServiceImple forgetPasswordServiceImple;
 
 	@Autowired
 	UserRepository userRepository;
@@ -65,10 +62,6 @@ public class JudgeController {
 	@Autowired
 	Cloudinary cloudinary;
 
-
-    JudgeController(ForgetPasswordServiceImple forgetPasswordServiceImple) {
-        this.forgetPasswordServiceImple = forgetPasswordServiceImple;
-    }
   
     
 	@GetMapping("judge-dashboard")
@@ -245,7 +238,7 @@ public class JudgeController {
 		}
 		
 		if (!newPassword.equals(confirmPassword)) {
-			model.addAttribute("error", "New password and confirm password do not match.")
+			model.addAttribute("error", "New password and confirm password do not match.");
 			return "judge/JudgeChangePassword";
 		}
 		

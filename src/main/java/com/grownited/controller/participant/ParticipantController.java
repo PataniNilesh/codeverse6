@@ -15,7 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.grownited.controller.AdminController;
 import com.grownited.entity.HackathonDescriptionEntity;
 import com.grownited.entity.HackathonEntity;
@@ -28,12 +31,13 @@ import com.grownited.entity.HackathonTeamMembersEntity;
 import com.grownited.entity.UserDetailEntity;
 import com.grownited.entity.UserEntity;
 import com.grownited.repository.*;
+import com.grownited.service.MailerService;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ParticipantController {
 
-    
 
 	@Autowired
     UserRepository userRepository;
@@ -65,11 +69,9 @@ public class ParticipantController {
 	@Autowired
 	HackathonPrizeRepository hackathonPrizeRepository;
 
-
-    ParticipantController(HackathonPrizeRepository hackathonPrizeRepository) {
-        this.hackathonPrizeRepository = hackathonPrizeRepository;
-    }
-
+	
+	@Autowired
+	MailerService mailerService;
 	
 	
 	@GetMapping("/participant/participant-dashboard")
@@ -78,13 +80,17 @@ public class ParticipantController {
 	}
 	
 	@GetMapping("participant/home")
-	public String home(Model model) {
+	public String home(Integer hackathonId, Model model) {
+		
+//		long hackathonCount = hackathonRepository.countByHackathonId(hackathonId);
 		model.addAttribute("hackathon", hackathonRepository.findAll());
+//		model.addAttribute("hackathonCount", hackathonCount);
 		return "participant/Home";
 	}
 	
 	@GetMapping("participant/profile")
-	public String profile(String success, String error, HttpSession session, Model model) {
+	public String profile(@RequestParam(required = false) String success, @RequestParam(required = false) String error,
+			Model model, HttpSession session) {
 		
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		
@@ -103,9 +109,12 @@ public class ParticipantController {
 	
 	@PostMapping("participant/profile/save")
 	@Transactional
-	public String saveProfile(String firstName, String lastName,String contactNum,
-			String gender,Integer birthYear, String qualification,String designation,
-			String organization,String city, String state,String country,HttpSession session) {
+	public String saveProfile(@RequestParam String firstName, @RequestParam String lastName,
+			@RequestParam(required = false) String contactNum, @RequestParam(required = false) String gender,
+			@RequestParam(required = false) Integer birthYear, @RequestParam(required = false) String qualification,
+			@RequestParam(required = false) String designation, @RequestParam(required = false) String organization,
+			@RequestParam(required = false) String city, @RequestParam(required = false) String state,
+			@RequestParam(required = false) String country, HttpSession session) {
 		
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		
@@ -217,7 +226,9 @@ public class ParticipantController {
 	}
 	
 	@GetMapping("/participant/hackathon/{hackathonId}")
-	public String hackathonDetails(Integer hackathonId,String joined,String success,String error, HttpSession session, Model model) {
+	public String hackathonDetails(@PathVariable Integer hackathonId, @RequestParam(required = false) String joined,
+			@RequestParam(required = false) String success, @RequestParam(required = false) String error, Model model,
+			HttpSession session) {
 		
 		Optional<HackathonEntity> opHackathon = hackathonRepository.findById(hackathonId);
 		
@@ -269,7 +280,7 @@ public class ParticipantController {
 	
 	@PostMapping("participant/hackathon/{hackathonId}/join")
 	@Transactional
-	public String joinHackathon(Integer hackathonId, HttpSession session) {
+	public String joinHackathon(@PathVariable Integer hackathonId, HttpSession session) {
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if(user == null) {
 			return "redirect:/login";
@@ -304,9 +315,10 @@ public class ParticipantController {
 		
 	}
 	
-	@PostMapping("participant/hackathon/{hackathonId}/team")
+	@GetMapping("participant/hackathon/{hackathonId}/team")
 	@Transactional
-	public String manageTeam(Integer hackathonId, HttpSession session, Model model, String success, String error) {
+	public String manageTeam(@PathVariable Integer hackathonId, @RequestParam(required = false) String success,
+			@RequestParam(required = false) String error, Model model, HttpSession session) {
 		
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if(user == null) {
@@ -359,7 +371,7 @@ public class ParticipantController {
 					.filter(u -> u.getActive() != null && u.getActive())
 					.filter(u -> !existingMemberIds.contains(u.getUserId()))
 					.filter(u -> !u.getUserId().equals(user.getUserId()))
-					.filter(u -> !hackathonTeamMembersRepository.existsByHackathonIdAndMemberId(hackathonId, user.getUserId()))
+					.filter(u -> !hackathonTeamMembersRepository.existsByHackathonIdAndMemberId(hackathonId, u.getUserId()))
 					.collect(Collectors.toList());
 			
 			inviteList = hackathonTeamInviteRepository.findByTeamIdOrderByHackathonTeamInviteIdDesc(teamId);
@@ -407,7 +419,7 @@ public class ParticipantController {
 	
 	@PostMapping("participant/hackathon/{hackathonId}/team/create")
 	@Transactional
-	public String createTeam(Integer hackathonId ,String teamName, HttpSession session) {
+	public String createTeam(@PathVariable Integer hackathonId, @RequestParam String teamName, HttpSession session) {
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if(user == null) {
 			return "redirect:/login";
@@ -443,9 +455,9 @@ public class ParticipantController {
 		return "redirect:/participant/hackathon/" + hackathonId + "/team?success=teamCreated";
 	}
 	
-	@PostMapping("participant/hackathon/{hackathonId}/team/join-team")
+	@PostMapping("participant/hackathon/{hackathonId}/team/join-existing")
 	@Transactional
-	public String joinExistingTeam(Integer hackathonId,Integer joinTeamId, HttpSession session) {
+	public String joinExistingTeam(@PathVariable Integer hackathonId, @RequestParam Integer joinTeamId, HttpSession session) {
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if(user == null) {
 			return "redirect:/login";
@@ -494,7 +506,7 @@ public class ParticipantController {
 	
 	@PostMapping("participant/hackathon/{hackathonId}/team/invite-member")
 	@Transactional
-	public String inviteRegisteredMember(Integer hackathonId,Integer invitedUserId,HttpSession session) {
+	public String inviteRegisteredMember(@PathVariable Integer hackathonId, @RequestParam Integer invitedUserId, HttpSession session) {
 		
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if(user == null) {
@@ -556,9 +568,10 @@ public class ParticipantController {
 		return "redirect:/participant/hackathon/" + hackathonId + "/team?succes=memberInvited";
 	}
 	
-	@PostMapping("participant/hackathon/{hackathonId}/team/invite-external");
+	@PostMapping("participant/hackathon/{hackathonId}/team/invite-external")
 	@Transactional
-	public String inviteExternalMember(HttpSession session, Integer hackathonId,String roleTitle, String externalEmail) {
+	public String inviteExternalMember(@PathVariable Integer hackathonId, @RequestParam String externalEmail,
+			@RequestParam(required = false) String roleTitle, HttpSession session) {
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if (user == null) {
 			return "redirect:/login";
@@ -599,12 +612,21 @@ public class ParticipantController {
 		externalInvite.setCreatedAt(LocalDate.now());
 		hackathonTeamInviteRepository.save(externalInvite);
 		
+//		mailerService.sendExternalInviteEmail(
+//			    externalEmail,
+//			    opTeam.get().getTeamName(),
+//			    opHackathon.get().getTitle(),
+//			    externalInvite.getRoleTitle(),
+//			    user.getFirstName() + " " + user.getLastName(),
+//			    user.getEmail()
+//			);
+		
 		return "redirect:/participant/hackathon/" + hackathonId + "/team?success=externalInvited";
 	}
 	
 	@PostMapping("participant/hackathon/{hackathonId}/team/remove-member")
 	@Transactional
-	public String removeMember(Integer hackathonId,Integer memberId,HttpSession session) {
+	public String removeMember(@PathVariable Integer hackathonId, @RequestParam Integer memberId, HttpSession session) {
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if(user == null) {
 			return "redirect:/login";
@@ -635,26 +657,26 @@ public class ParticipantController {
 	
 	@PostMapping("participant/hackathon/{hackathonId}/invite/{inviteId}/accept")
 	@Transactional
-	public String acceptInvitation(Integer hackathonId, Integer inviteId, HttpSession session) {
+	public String acceptInvitation(@PathVariable Integer hackathonId, @PathVariable Integer inviteId, HttpSession session) {
 		return handleInvitationResponse(hackathonId, inviteId, session, true, false);
 	}
 	
 	@PostMapping("participant/hackathon/{hackathonId}/invite/{inviteId}/reject")
 	@Transactional
-	public String rejectInvitation(Integer hackathonId, Integer inviteId, HttpSession session) {
+	public String rejectInvitation(@PathVariable Integer hackathonId, @PathVariable Integer inviteId, HttpSession session) {
 		return handleInvitationResponse(hackathonId, inviteId, session, false, false);
 	}
 	
 	@PostMapping("participant/hackathon/{hackathonId}/team/invite/{inviteId}/accept")
 	@Transactional
-	public String acceptInvitationFromTeamPage((Integer hackathonId, Integer inviteId, HttpSession session) {
-		return handleInvitationResponse(hackathonId, Integer, session, true, true);
+	public String acceptInvitationFromTeamPage(@PathVariable Integer hackathonId, @PathVariable Integer inviteId, HttpSession session) {
+		return handleInvitationResponse(hackathonId, inviteId, session, true, true);
 	}
 	
 	@PostMapping("participant/hackathon/{hackathonId}/team/invite/{inviteId}/reject")
 	@Transactional
-	public String rejectInvitationFromTeamPage((Integer hackathonId, Integer inviteId, HttpSession session) {
-		return handleInvitationResponse(hackathonId, Integer, session, false, true);
+	public String rejectInvitationFromTeamPage(@PathVariable Integer hackathonId, @PathVariable Integer inviteId, HttpSession session) {
+		return handleInvitationResponse(hackathonId, inviteId, session, false, true);
 	}
 	
 	
@@ -720,7 +742,8 @@ public class ParticipantController {
 	}
 	
 	@GetMapping("participant/hackathon/{hackathonId}/submission")
-	public String openSubmission(Integer hackathonId, HttpSession session, Model model, String success, String error) {
+	public String openSubmission(@PathVariable Integer hackathonId, @RequestParam(required = false) String success,
+			@RequestParam(required = false) String error, Model model, HttpSession session) {
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if(user == null) {
 			return "redirect:/login";
@@ -759,7 +782,7 @@ public class ParticipantController {
 	
 	@PostMapping("participant/hackathon/{hackathonId}/submission/save")
 	@Transactional
-	public String saveSubmission(Integer hackathonId,HackathonSubmissionEntity formSubmission, HttpSession session) {
+	public String saveSubmission(@PathVariable Integer hackathonId, HackathonSubmissionEntity formSubmission, HttpSession session) {
 		UserEntity user = (UserEntity) session.getAttribute("user");
 		if (user == null) {
 			return "reirect:/login";

@@ -1,367 +1,164 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
 <!DOCTYPE html>
 <html lang="en">
-<!-- [Head] start -->
-
 <head>
-  <title>Home | LahkuX Admin Template</title>
-  <!-- [Meta] -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="Mantis is made using Bootstrap 5 design framework. Download the free admin template & use it for your project.">
-  <meta name="keywords" content="Mantis, Dashboard UI Kit, Bootstrap 5, Admin Template, Admin Dashboard, CRM, CMS, Bootstrap Admin Template">
-  <meta name="author" content="CodedThemes">
-  
-  <jsp:include page="AdminCSS.jsp"></jsp:include>
-
+<title>Admin Dashboard | ICH</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<jsp:include page="AdminCSS.jsp"></jsp:include>
+<style>
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{
+  background:#fff;border:1px solid #e4e8f2;border-radius:14px;
+  padding:20px;position:relative;overflow:hidden;
+  transition:box-shadow .2s,transform .2s;
+}
+.stat-card:hover{box-shadow:0 6px 24px rgba(28,35,64,.1);transform:translateY(-2px)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+.stat-card.c1::before{background:#4f46e5}
+.stat-card.c2::before{background:#0ea5e9}
+.stat-card.c3::before{background:#16a34a}
+.stat-card.c4::before{background:#f59e0b}
+.stat-icon{
+  width:42px;height:42px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:14px;flex-shrink:0;
+}
+.si1{background:#eef2ff;color:#4f46e5}
+.si2{background:#f0f9ff;color:#0369a1}
+.si3{background:#f0fdf4;color:#16a34a}
+.si4{background:#fffbeb;color:#b45309}
+.stat-label{font-size:11px;font-family:'Space Mono',monospace;letter-spacing:.8px;text-transform:uppercase;color:#8a94b0;margin-bottom:6px}
+.stat-value{font-size:28px;font-weight:800;color:#1c2340;line-height:1;font-family:'Syne',sans-serif}
+.stat-note{font-size:12px;color:#8a94b0;margin-top:6px}
+.chart-card{background:#fff;border:1px solid #e4e8f2;border-radius:14px;padding:20px;margin-bottom:20px}
+.chart-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.chart-card-title{font-size:15px;font-weight:800;color:#1c2340}
+.chart-card-sub{font-size:13px;color:#8a94b0;margin-top:2px}
+.chart-link{font-size:12px;font-weight:700;color:#4f46e5;text-decoration:none;font-family:'Space Mono',monospace}
+@media(max-width:900px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.stat-grid{grid-template-columns:1fr}}
+</style>
 </head>
-<!-- [Head] end -->
-<!-- [Body] Start -->
-
 <body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
-  <!-- [ Pre-loader ] start -->
-<div class="loader-bg">
-  <div class="loader-track">
-    <div class="loader-fill"></div>
-  </div>
-</div>
-<!-- [ Pre-loader ] End -->
- <!-- [ Sidebar Menu ] start -->
+<div class="loader-bg"><div class="loader-track"><div class="loader-fill"></div></div></div>
 <jsp:include page="AdminLeftSidebar.jsp"></jsp:include>
-<!-- [ Sidebar Menu ] end --> <!-- [ Header Topbar ] start -->
 <jsp:include page="AdminHeader.jsp"></jsp:include>
 
-<!-- [ Header ] end -->
+<div class="pc-container">
+  <div class="pc-content">
 
+    <!-- Welcome -->
+    <div style="margin-bottom:24px;">
+      <h3 style="font-size:22px;font-weight:800;color:#1c2340;">
+        Welcome back, ${sessionScope.user.firstName} &#128075;
+      </h3>
+      <p style="color:#8a94b0;font-size:14px;margin-top:4px;">Here&#8217;s your platform overview for today.</p>
+    </div>
 
-
-  <!-- [ Main Content ] start -->
-  <div class="pc-container">
-    <div class="pc-content">
-      <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-		<h3 class="font-weight-bold">Welcome ${sessionScope.user.firstName}</h3>
-		<h6 class="font-weight-normal mb-0">
-			All systems are running smoothly! You have <span
-				class="text-primary">3 unread alerts!</span>
-		</h6>
-	  </div>
-      <!-- [ breadcrumb ] start -->
-      <div class="page-header">
-        <div class="page-block">
-          <div class="row align-items-center">
-            <div class="col-md-12">
-              <div class="page-header-title">
-                  <h5 class="m-b-10">Home</h5>
-              </div>
-              <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="../dashboard/index.html">Home</a></li>
-                <li class="breadcrumb-item"><a href="javascript: void(0)">Dashboard</a></li>
-                <li class="breadcrumb-item" aria-current="page">Home</li>
-              </ul> 
-            </div>
-          </div>
+    <!-- Stat cards — EL kept: ${totalHackathon} ${totalUpcoming} ${totalCompleted} ${totalParticipant} -->
+    <div class="stat-grid">
+      <div class="stat-card c1">
+        <div class="stat-icon si1">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
         </div>
+        <div class="stat-label">Total Hackathons</div>
+        <div class="stat-value">${totalHackathon}</div>
+        <div class="stat-note">All time hackathons</div>
       </div>
-      <!-- [ breadcrumb ] end -->
-      
-      
-      <!-- [ Main Content ] start -->
-      <div class="row">
-      	
-        <!-- [ sample-page ] start -->
-        <div class="col-md-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 f-w-400 text-muted">Total Page Views</h6>
-              <h4 class="mb-3">4,42,236 <span class="badge bg-light-primary border border-primary"><i
-                    class="ti ti-trending-up"></i> 59.3%</span></h4>
-              <p class="mb-0 text-muted text-sm">You made an extra <span class="text-primary">35,000</span> this year
-              </p>
-            </div>
-          </div>
+      <div class="stat-card c2">
+        <div class="stat-icon si2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
-        <div class="col-md-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 f-w-400 text-muted">Total Users</h6>
-              <h4 class="mb-3">78,250 <span class="badge bg-light-success border border-success"><i
-                    class="ti ti-trending-up"></i> 70.5%</span></h4>
-              <p class="mb-0 text-muted text-sm">You made an extra <span class="text-success">8,900</span> this year</p>
-            </div>
-          </div>
+        <div class="stat-label">Upcoming</div>
+        <div class="stat-value">${totalUpcoming}</div>
+        <div class="stat-note">Scheduled hackathons</div>
+      </div>
+      <div class="stat-card c3">
+        <div class="stat-icon si3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
-        <div class="col-md-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 f-w-400 text-muted">Total Order</h6>
-              <h4 class="mb-3">18,800 <span class="badge bg-light-warning border border-warning"><i
-                    class="ti ti-trending-down"></i> 27.4%</span></h4>
-              <p class="mb-0 text-muted text-sm">You made an extra <span class="text-warning">1,943</span> this year</p>
-            </div>
-          </div>
+        <div class="stat-label">Completed</div>
+        <div class="stat-value">${totalCompleted}</div>
+        <div class="stat-note">Finished hackathons</div>
+      </div>
+      <div class="stat-card c4">
+        <div class="stat-icon si4">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
-        <div class="col-md-6 col-xl-3">
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 f-w-400 text-muted">Total Sales</h6>
-              <h4 class="mb-3">$35,078 <span class="badge bg-light-danger border border-danger"><i
-                    class="ti ti-trending-down"></i> 27.4%</span></h4>
-              <p class="mb-0 text-muted text-sm">You made an extra <span class="text-danger">$20,395</span> this year
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-12 col-xl-8">
-          <div class="d-flex align-items-center justify-content-between mb-3">
-            <h5 class="mb-0">Unique Visitor</h5>
-            <ul class="nav nav-pills justify-content-end mb-0" id="chart-tab-tab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <button class="nav-link" id="chart-tab-home-tab" data-bs-toggle="pill" data-bs-target="#chart-tab-home"
-                  type="button" role="tab" aria-controls="chart-tab-home" aria-selected="true">Month</button>
-              </li>
-              <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="chart-tab-profile-tab" data-bs-toggle="pill"
-                  data-bs-target="#chart-tab-profile" type="button" role="tab" aria-controls="chart-tab-profile"
-                  aria-selected="false">Week</button>
-              </li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <div class="tab-content" id="chart-tab-tabContent">
-                <div class="tab-pane" id="chart-tab-home" role="tabpanel" aria-labelledby="chart-tab-home-tab"
-                  tabindex="0">
-                  <div id="visitor-chart-1"></div>
-                </div>
-                <div class="tab-pane show active" id="chart-tab-profile" role="tabpanel"
-                  aria-labelledby="chart-tab-profile-tab" tabindex="0">
-                  <div id="visitor-chart"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 col-xl-4">
-          <h5 class="mb-3">Income Overview</h5>
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 f-w-400 text-muted">This Week Statistics</h6>
-              <h3 class="mb-3">$7,650</h3>
-              <div id="income-overview-chart"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-12 col-xl-8">
-          <h5 class="mb-3">Recent Orders</h5>
-          <div class="card tbl-card">
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-hover table-borderless mb-0">
-                  <thead>
-                    <tr>
-                      <th>TRACKING NO.</th>
-                      <th>PRODUCT NAME</th>
-                      <th>TOTAL ORDER</th>
-                      <th>STATUS</th>
-                      <th class="text-end">TOTAL AMOUNT</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Camera Lens</td>
-                      <td>40</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-danger f-10 m-r-5"></i>Rejected</span>
-                      </td>
-                      <td class="text-end">$40,570</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Laptop</td>
-                      <td>300</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-warning f-10 m-r-5"></i>Pending</span>
-                      </td>
-                      <td class="text-end">$180,139</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Mobile</td>
-                      <td>355</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-success f-10 m-r-5"></i>Approved</span></td>
-                      <td class="text-end">$180,139</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Camera Lens</td>
-                      <td>40</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-danger f-10 m-r-5"></i>Rejected</span>
-                      </td>
-                      <td class="text-end">$40,570</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Laptop</td>
-                      <td>300</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-warning f-10 m-r-5"></i>Pending</span>
-                      </td>
-                      <td class="text-end">$180,139</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Mobile</td>
-                      <td>355</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-success f-10 m-r-5"></i>Approved</span></td>
-                      <td class="text-end">$180,139</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Camera Lens</td>
-                      <td>40</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-danger f-10 m-r-5"></i>Rejected</span>
-                      </td>
-                      <td class="text-end">$40,570</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Laptop</td>
-                      <td>300</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-warning f-10 m-r-5"></i>Pending</span>
-                      </td>
-                      <td class="text-end">$180,139</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Mobile</td>
-                      <td>355</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-success f-10 m-r-5"></i>Approved</span></td>
-                      <td class="text-end">$180,139</td>
-                    </tr>
-                    <tr>
-                      <td><a href="#" class="text-muted">84564564</a></td>
-                      <td>Mobile</td>
-                      <td>355</td>
-                      <td><span class="d-flex align-items-center gap-2"><i
-                            class="fas fa-circle text-success f-10 m-r-5"></i>Approved</span></td>
-                      <td class="text-end">$180,139</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 col-xl-4">
-          <h5 class="mb-3">Analytics Report</h5>
-          <div class="card">
-            <div class="list-group list-group-flush">
-              <a href="#"
-                class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">Company
-                Finance Growth<span class="h5 mb-0">+45.14%</span></a>
-              <a href="#"
-                class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">Company
-                Expenses Ratio<span class="h5 mb-0">0.58%</span></a>
-              <a href="#"
-                class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">Business
-                Risk Cases<span class="h5 mb-0">Low</span></a>
-            </div>
-            <div class="card-body px-2">
-              <div id="analytics-report-chart"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-12 col-xl-8">
-          <h5 class="mb-3">Sales Report</h5>
-          <div class="card">
-            <div class="card-body">
-              <h6 class="mb-2 f-w-400 text-muted">This Week Statistics</h6>
-              <h3 class="mb-0">$7,650</h3>
-              <div id="sales-report-chart"></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12 col-xl-4">
-          <h5 class="mb-3">Transaction History</h5>
-          <div class="card">
-            <div class="list-group list-group-flush">
-              <a href="#" class="list-group-item list-group-item-action">
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <div class="avtar avtar-s rounded-circle text-success bg-light-success">
-                      <i class="ti ti-gift f-18"></i>
-                    </div>
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    <h6 class="mb-1">Order #002434</h6>
-                    <p class="mb-0 text-muted">Today, 2:00 AM</P>
-                  </div>
-                  <div class="flex-shrink-0 text-end">
-                    <h6 class="mb-1">+ $1,430</h6>
-                    <p class="mb-0 text-muted">78%</P>
-                  </div>
-                </div>
-              </a>
-              <a href="#" class="list-group-item list-group-item-action">
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <div class="avtar avtar-s rounded-circle text-primary bg-light-primary">
-                      <i class="ti ti-message-circle f-18"></i>
-                    </div>
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    <h6 class="mb-1">Order #984947</h6>
-                    <p class="mb-0 text-muted">5 August, 1:45 PM</P>
-                  </div>
-                  <div class="flex-shrink-0 text-end">
-                    <h6 class="mb-1">- $302</h6>
-                    <p class="mb-0 text-muted">8%</P>
-                  </div>
-                </div>
-              </a>
-              <a href="#" class="list-group-item list-group-item-action">
-                <div class="d-flex">
-                  <div class="flex-shrink-0">
-                    <div class="avtar avtar-s rounded-circle text-danger bg-light-danger">
-                      <i class="ti ti-settings f-18"></i>
-                    </div>
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    <h6 class="mb-1">Order #988784</h6>
-                    <p class="mb-0 text-muted">7 hours ago</P>
-                  </div>
-                  <div class="flex-shrink-0 text-end">
-                    <h6 class="mb-1">- $682</h6>
-                    <p class="mb-0 text-muted">16%</P>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
+        <div class="stat-label">Participants</div>
+        <div class="stat-value">${totalParticipant}</div>
+        <div class="stat-note">Registered users</div>
       </div>
     </div>
+
+   
+    <div class="chart-card">
+      <div class="chart-card-head">
+        <div>
+          <div class="chart-card-title">Enrollment Report</div>
+          <div class="chart-card-sub">Total registrations in past months</div>
+        </div>
+        <a href="listuser" class="chart-link">View all &rarr;</a>
+      </div>
+      <div id="sales-chart-legend" class="chartjs-legend mt-4 mb-2"></div>
+      <canvas id="myChart" style="max-height:300px;"></canvas>
+    </div>
+
   </div>
-  <!-- [ Main Content ] end -->
-  <!-- [ Footer ] start-->
-  <jsp:include page="AdminFooter.jsp"></jsp:include> 
-  <!-- [ Footer ] end-->
+</div>
+
+<jsp:include page="AdminFooter.jsp"></jsp:include>
+
  
+<script>
+
+// ✅ Labels (months)
+const labels = [
+<c:forEach var="m" items="${months}" varStatus="loop">
+    "${m}"<c:if test="${!loop.last}">,</c:if>
+</c:forEach>
+];
+
+// ✅ Data (counts)
+const dataValues = [
+<c:forEach var="c" items="${counts}" varStatus="loop">
+    ${c}<c:if test="${!loop.last}">,</c:if>
+</c:forEach>
+];
+
+// ✅ Chart
+new Chart(document.getElementById('myChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'User Registrations',
+            data: dataValues,
+            backgroundColor: 'rgba(79,70,229,0.2)',
+            borderColor: '#4f46e5',
+            borderWidth: 2,
+            borderRadius: 5
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: true }
+        },
+        scales: {
+            x: {
+                ticks: { color: '#8a94b0' }
+            },
+            y: {
+                ticks: { color: '#8a94b0' }
+            }
+        }
+    }
+});
+
+</script>
+
 </body>
-<!-- [Body] end -->
 </html>

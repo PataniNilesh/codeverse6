@@ -154,5 +154,47 @@ public class MailerService {
 		return text == null ? "" : text;
 	}
 	
-
+	
+//	public void sendExternalInviteEmail(
+//	        String email,
+//	        String teamName,
+//	        String hackathonTitle,
+//	        String role,
+//	        String inviterName,
+//	        String inviterEmail
+//	) {
+//	    try {
+//	        MimeMessage message = javaMailSender.createMimeMessage();
+//
+//	        String body =
+//	            "<div style='font-family:Arial,sans-serif;line-height:1.6'>"
+//	            + "<h2>🚀 Hackathon Team Invitation</h2>"
+//
+//	            + "<p><b>" + inviterName + "</b> (" + inviterEmail + ") "
+//	            + "has invited you to join their team.</p>"
+//
+//	            + "<p><b>Hackathon:</b> " + hackathonTitle + "</p>"
+//	            + "<p><b>Team:</b> " + teamName + "</p>"
+//	            + "<p><b>Your Role:</b> " + role + "</p>"
+//
+//	            + "<br/>"
+//	            + "<p>Click below to join:</p>"
+//	            + "<a href='http://localhost:9797/login'>Accept Invitation</a>"
+//
+//	            + "<br/><br/>"
+//	            + "<p>Regards,<br/>CodeVerse Team</p>"
+//	            + "</div>";
+//
+//	        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//
+//	        helper.setTo(email);
+//	        helper.setSubject("Team Invitation from " + inviterName);
+//	        helper.setText(body, true);
+//
+//	        javaMailSender.send(message);
+//
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	    }
+//	}
 }

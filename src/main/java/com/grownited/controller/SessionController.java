@@ -83,6 +83,9 @@ public class SessionController {
 				} else if (dbUser.getRole().equals("PARTICIPANT")) {
 					return "redirect:/participant/home"; // url 
 				} else if (dbUser.getRole().equals("JUDGE")) {
+					if (Boolean.TRUE.equals(dbUser.getPasswordResetRequired())) {
+						return "redirect:/judge/change-password";
+					}
 					return "redirect:/judge-dashboard";
 				}
 			}
@@ -131,45 +134,81 @@ public class SessionController {
 	}
 	
 	@PostMapping("/register")
-	public String register(UserEntity userEntity, UserDetailEntity userDetailEntity, MultipartFile profilePic) {
+	public String register(UserEntity userEntity, UserDetailEntity userDetailEntity, MultipartFile profilePic, Model model) {
 				
-		System.out.println(userEntity.getFirstName());
-		System.out.println(userEntity.getLastName());
-		System.out.println("Processor => " + Runtime.getRuntime().availableProcessors());
-		System.out.println(userDetailEntity.getCountry());
-		System.out.println(userDetailEntity.getState());
-		
-		
+//		System.out.println(userEntity.getFirstName());
+//		System.out.println(userEntity.getLastName());
+//		System.out.println("Processor => " + Runtime.getRuntime().availableProcessors());
+//		System.out.println(userDetailEntity.getCountry());
+//		System.out.println(userDetailEntity.getState());
+//		
+
+		if (userEntity.getEmail() == null || userEntity.getPassword() == null) {
+			model.addAttribute("error", "Email and password are required.");
+			model.addAttribute("allUserType", userTypeRepository.findAll());
+			return "Signup";
+		}
+
+		String email = userEntity.getEmail().trim().toLowerCase();
+		if (userRepository.findByEmail(email).isPresent()) {
+			model.addAttribute("error", "This email is already registered. Please login.");
+			model.addAttribute("allUserType", userTypeRepository.findAll());
+			return "Signup";
+		}
+
 		userEntity.setRole("PARTICIPANT");
 		userEntity.setActive(true);
+		userEntity.setPasswordResetRequired(false);
 		userEntity.setCreatedAt(LocalDate.now());
+		userEntity.setEmail(email);
+		
+		System.out.println("A");
 		
 		//encode password
 		String encodedPassword = passwordEncoder.encode(userEntity.getPassword());
-		System.out.println(encodedPassword);
+//		System.out.println(encodedPassword);
 		
 		userEntity.setPassword(encodedPassword);
 		
-		// file uploading
-		System.out.println(profilePic.getOriginalFilename());
+//		// file uploading
+//		System.out.println(profilePic.getOriginalFilename());
+//		
+//		try {
+//			Map map = cloudinary.uploader().upload(profilePic.getBytes(), null);
+//			String profilePicUrl = map.get("secure_url").toString();
+//			System.out.println(profilePicUrl);
+//			userEntity.setProfilePicUrl(profilePicUrl);
+//			
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
-		try {
-			Map map = cloudinary.uploader().upload(profilePic.getBytes(), null);
-			String profilePicUrl = map.get("secure_url").toString();
-			System.out.println(profilePicUrl);
-			userEntity.setProfilePicUrl(profilePicUrl);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// file uploading
+		if (profilePic != null && !profilePic.isEmpty()) {
+			try {
+				Map map = cloudinary.uploader().upload(profilePic.getBytes(), null);
+				Object secureUrl = map.get("secure_url");
+				if (secureUrl != null) {
+					userEntity.setProfilePicUrl(secureUrl.toString());
+				}
+			} catch (Exception e) {
+				// profile pic is optional; continue signup even if upload fails
+				e.printStackTrace();
+			}
 		}
 		
-		//users insert -> UserRepository
-		//new -> X
+		System.out.println("B");
+		// users insert -> UserRepository
+		// new -> X
 		userRepository.save(userEntity); // users insert -> userId
+		if (userDetailEntity.getQualification() == null) {
+			userDetailEntity.setQualification(userEntity.getQualification());
+		}
 		userDetailEntity.setUserId(userEntity.getUserId());
-		userDetailRepository.save(userDetailEntity);
+		userDetailRepository.save(userDetailEntity);//
 		
+		System.out.println("C");
 		//welcome mail send
 		mailerService.sendWelcomeMail(userEntity);
 		return "Login";
